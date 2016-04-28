@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# Licence CeCILL compatible Gnu-Gpl (License.txt)
+
 ### Liste les pages de l'espace de nom "Département" nº 108 
 ### Verifie si redirection et cherche la cible
 ### Liste les sous-pages. les liens dans leçons par thèmes et leçons par niveaux

@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
+# Licence CeCILL compatible Gnu-Gpl (License.txt)
+
 ########################################################################
 ### Création d'une liste de faculté 
 ### basée sur l'analyse de l'espace de nom "Faculté:" num_id "106" via Pywikibot
