@@ -10,11 +10,11 @@
 ### et  liste des départements
 ########################################################################
 
-# Variables PWB
 import pywikibot
-lang = 'fr'                    # prefixe langue
+lang = 'fr'                    
 family = 'wikiversity'
-site = pywikibot.Site(lang, family) # On obtient très facilement la liste des pages dans l'espace de nom 106 Faculté via Pywikibot
+site = pywikibot.Site(lang, family) 
+
 ### Variables etape-1
 liste_facultes = []   # pages
 liste_sous_pages = [] # sous-pages

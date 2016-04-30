@@ -4,16 +4,16 @@
 # Licence CeCILL compatible Gnu-Gpl (License.txt)
 
 ### Liste les pages de l'espace de nom "Département" nº 108 
-### Verifie si redirection et cherche la cible
-### Liste les sous-pages. les liens dans leçons par thèmes et leçons par niveaux
-### Compare les deux listes de liens et les fusionnent
-### Verifie si les pages derrière les liens existent
+#   Verifie si redirection et cherche la cible
+#   Liste les sous-pages. les liens dans leçons par thèmes et leçons par niveaux
+#   Compare les deux listes de liens et les fusionnent
+#   Verifie si les pages derrière les liens existent
 ### Compare le nombre de page d'interface et le nombre de leçons du département
 
 import pywikibot
-lang = 'fr'                    # prefixe langue
+lang = 'fr'       
 family = 'wikiversity'
-site = pywikibot.Site(lang, family)  # 
+site = pywikibot.Site(lang, family)  
 
 #log = ''
 sous_pages = []

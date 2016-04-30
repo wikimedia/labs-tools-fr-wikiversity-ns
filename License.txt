@@ -1,7 +1,9 @@
  
-Copyright. [Olivier Duval] ([April - 28 - 2016])
+Copyright. Olivier Duval (April-28-2016)
 
-[oliv71@laposte.net]
+oliv71@laposte.net
+
+(French translation below)
 
 This software is a computer program whose purpose is to monitor customs namespaces of 
 fr-wikiversity project.
@@ -32,11 +34,11 @@ same conditions as regards security.
 The fact that you are presently reading this means that you have had
 knowledge of the [CeCILL|CeCILL-B|CeCILL-C] license and that you accept its terms.
 
-###
+#####################################################################
 
-Copyright. [Olivier Duval], ([28 avril 2016]) 
+Copyright. Olivier Duval, (28 avril 2016) 
 
-[oliv71@laposte.net]
+oliv71@laposte.net
 
 Ce logiciel est un programme informatique servant à monitorer 
 les espaces de noms supplémentaires du projet fr-wikiversité. 
