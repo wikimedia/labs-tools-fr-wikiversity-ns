@@ -18,25 +18,27 @@ site = pywikibot.Site(lang, family)
 ### Variables etape-1
 liste_facultes = []   # pages
 liste_sous_pages = [] # sous-pages
-listes = [liste_facultes, liste_sous_pages]
+liste_ns_106 = []     # liste pour résumer le nombre de pages dans l'espace de nom via t_ns_106
+listes = [liste_facultes, liste_sous_pages, liste_ns_106]
 ### Variables etape-2
 data_fac = {}         # key = faculté ; value = fac_params
 ### Variables etape-3
 dpt_fac = {}          # Tuple invere
-### Variables edition de pages
-title_list_fac = u"Projet:Laboratoire/Propositions/Espace de nom Faculté/Liste des facultés"
-title_list_dpt = u"Projet:Laboratoire/Propositions/Espace de nom Faculté/Liste des départements par faculté"
-title_list_dpt2 = u"Projet:Laboratoire/Propositions/Espace de nom Faculté/Liste des départements"
 
-### Fonction etape-1 : scanfac retourne reourne 2 listes (pages et sous-page)
+### Fonction etape-1 : scanfac retourne reourne 2 listes (pages et sous-page) ... + liste_ns_106
 def scanfac():
-  gen_fac = site.allpages(namespace=106) #, prefix='j')
+  gen_fac = site.allpages(namespace=106)#, prefix='p')
+  total_pages = 0
   for page in gen_fac:
+    total_pages = total_pages + 1
     str_page = str(page)           # Une chaine pour rechercher '/'
     if '/' in str_page: # SOUS-PAGE
       liste_sous_pages.append(page)  # La liste des sous-pages
     else:               # PAGE
       liste_facultes.append(page)    # La liste des facultés
+  liste_ns_106.append(total_pages)   # Les 3 valeurs ne sont pas nommée
+  liste_ns_106.append(len(liste_facultes)) # Il faudrait un disctionnaire
+  liste_ns_106.append(len(liste_sous_pages)) # pour associer les valeurs à des clés
   return listes
 ### Fonction etape 2: tuplefac retourne un tuple, data_fac qui associe les facultés et leurs paramètres
 ### data_fac[faculte] = fac_params (sous_page_fac, gen_dpt, nombre_departement)
@@ -62,19 +64,16 @@ def tuplefac():
     for departement in gen_dpt:   # Pour chaque lien dans le generateur PWB
       nombre_departement = nombre_departement + 1   # Compte les départements
     fac_params.append(nombre_departement)   # Le nombre de dṕartement par faculté
-    ### isRedirectPage(self) # ATTENTION verifier si la page du DEPARTEMENT est une redirection
     redir = faculte.isRedirectPage()
-    target_faculte = ''
-    #fac_params.append(redir)
+    target_faculte = 'No' # Si chaine vide Lua ne sauve pas le code
     if redir == True:
       target_faculte = faculte.getRedirectTarget()
-     # Stocker redir et target_page dans le tuple cf fonction 3 tupleinvert  
-    fac_params.append(redir)            # ATTENTION
+    fac_params.append(redir)            
     fac_params.append(target_faculte)   # Ajouter les nouveaux param. à la fin (index code module Lua)
     data_fac[faculte] = fac_params
     liens_departements = liens_departements + nombre_departement
     print str(count_fac) + " sur: " + str(nombre_faculte)
-  print liens_departements
+  print str(liens_departements) + 'liens_departements\n'
   return data_fac
 
 ### Fonction 3 tupleinvert() - La fonction inverse le tuple data_fac
@@ -101,124 +100,70 @@ def tupleinvert():
         l_fac.append(page)             # Ajoute la faculté dans la liste
   return dpt_fac
 
-### Fonctions Etape-4: Edition des pages
-def writelistfac():
-  page_txt = u"{{Titre|Liste des facultés (automatique)}}\n"
-  page_txt = page_txt + u'{|class="wikitable sortable"\n!Faculté\n!Nombre de département\n!Nombre de sous pages\n|-\n'
-  tableau_txt = u'' # initialise le tableau
-  for faculte in data_fac:
-    fac_params = data_fac[faculte]
-    [sous_page_fac, nb_sous_page_fac, gen_dpt, nombre_departement, redir, target_faculte] = fac_params
-    line_fac = '|' + str(faculte) + '\n|' + str(nombre_departement) + '\n|' + str(nb_sous_page_fac) + '\n|-\n'
-    line_fac = unicode(line_fac, 'utf-8')
-    tableau_txt = tableau_txt + line_fac # ajoute la ligne
-  page_txt = page_txt + tableau_txt + '|}\n'
-  page_txt = page_txt + u'[[Catégorie:Laboratoire]]'
-  comment = u'Analyse de l\'espace de noms Faculté - fr:wv'
-  title = title_list_fac
-  page = pywikibot.Page(site, title) # PWB variable
-  page.text = page_txt
-  page.save(comment) 
-
-def writelistdpt():
-  title = title_list_dpt
-  page_txt = u"{{Titre|Liste des départements par facultés (automatique)}}\n<small>fac.py</small>\n"
-  section_txt = u''
-  for faculte in data_fac:
-    fac_params = data_fac[faculte]
-    [sous_page_fac, nb_sous_page_fac, gen_dpt, nombre_departement, redir, target_faculte] = fac_params
-    ### modifier la variable str_faculte pour ajouter le label
-    line_txt = "== " + str(faculte) + " ==\n"
-    line_txt = unicode(line_txt, 'utf-8')
-    section_txt = section_txt + line_txt
-    dpt_txt = u''
-    for departement in gen_dpt:
-      line_txt = "* " + str(departement) + "\n"
-      line_txt = unicode(line_txt, 'utf-8')
-      dpt_txt = dpt_txt + line_txt
-    section_txt = section_txt + dpt_txt
-  page_txt = page_txt + section_txt + u"[[Catégorie: Laboratoire]]"
-  page = pywikibot.Page(site, title) # PWB variable
-  page.text = page_txt
-  comment = u'Liste des départements par facultés'
-  page.save(comment) 
-
-def writelistdpt2(): 
-  title = title_list_dpt2
-  page_txt = u"{{Titre|Liste des départements (automatique)}}\n<small>fac.py</small>\n"
-  page_txt = page_txt + u'{|class="wikitable sortable"\n!Département\n!Nombre de facultés\n!Facultés\n!Redirection\n!Redirige vers\n|-\n'
-  tableau = u''
-  for departement in dpt_fac:
-    dpt_params = dpt_fac[departement]
-    [redir, target_departement, l_fac] = dpt_params
-    nb_fac_dep = len(l_fac)
-    fac_txt = ''
-    for fac in l_fac:      
-      fac_txt = fac_txt + str(fac) + ' '
-    line_txt = "|" + str(departement) + "\n|" + str(nb_fac_dep) + "\n|" + fac_txt + "\n|" + str(redir) + "\n|" + str(target_departement) + "\n|-\n"
-    
-    #fac_txt = unicode(fac_txt, 'utf-8')
-    line_txt = unicode(line_txt, 'utf-8') #+ fac_txt + "\n|-\n"
-    tableau = tableau + line_txt
-  page_txt = page_txt + tableau + u"|}\n[[Catégorie:Laboratoire]]"
-  page = pywikibot.Page(site, title) # PWB variable
-  page.text = page_txt
-  comment = u'Liste des facultés par départements'
-  page.save(comment) 
 
 ### Fonction 5 - write_module() - Ecriture du module "Table faculté"
-# ATTENTION ajouter redir et cible dans la table "ns_faculte"
-# Ajouter la table "dpt_fac" issue de la fonction tupleinvert().
+# Trier la table avant d'ecrire le module
+# par nom puis essayer de placer les redir en debut de liste ensuite
 def write_module(): # RENOMMER write_module
   result = 'local p = {}\n'
   # DEBUT fx write_table_fac()
-  result = result + 'p.ns_faculte = {' # la table de l'ESPACE DE NOM
-  for fac in data_fac:
+  result = result + 'p.ns_faculte = {\n' # la table de l'ESPACE DE NOM
+  for fac in sorted(data_fac):
     [sous_page_fac, nb_sous_page_fac, gen_dpt, nombre_departement, redir, target_faculte] = data_fac[fac]
-    result = result + '{' + str(fac) + ', ' + str(nb_sous_page_fac ) + ', '
-    var_liste_sous_page = '{'
+    result = result + '    {name = ' + str(fac) + ', \n    data = {\n' + '        nbsp = ' + str(nb_sous_page_fac ) + ', \n        ' #', ' + 
+    var_liste_sous_page = 'lsp = {'
     if len(sous_page_fac) == 0:
-      var_liste_sous_page = var_liste_sous_page + '}'
+      var_liste_sous_page = var_liste_sous_page + '},'
     else:
       for sous_page in sous_page_fac :
         var_liste_sous_page = var_liste_sous_page + str(sous_page) + ', '
-      var_liste_sous_page = var_liste_sous_page[:-2] + '}' # supprime la dernière virgule espace puis ferme l'accolades
-    result = result + var_liste_sous_page + ', ' + str(nombre_departement) + ', '
-    var_liste_departement = '{' # Ouvre la table Lua
+      var_liste_sous_page = var_liste_sous_page + '},' # ATTENTION INUTILE AVEC LUA de supprime la dernière virgule espace avant de fermer l'accolades
+    result = result + var_liste_sous_page + '\n        nbdpt = ' + str(nombre_departement) + ', \n'
+    var_liste_departement = '        ldpt = {' # Ouvre la table Lua
     c=0   ### Compte les departements
     for departement in gen_dpt:      ### PWB Generator !#@#
       c = c + 1   # Incremente le nombre de departement
       var_liste_departement = var_liste_departement + str(departement) + ', ' # ajoute le departement au code Lua
     if c == 0:    # Si aucun departement
-      var_liste_departement = var_liste_departement + '}' # penser à fermer la table lua
+      var_liste_departement = var_liste_departement + '}, \n' # VIDE penser à fermer la table lua
     else:         
-      var_liste_departement = var_liste_departement[:-2] + '}'    
-    result = result + var_liste_departement + '}, '
-  result = result[:-2] + '}\n'  
+      var_liste_departement = var_liste_departement + '}, \n'    #[:-2]
+    result = result + var_liste_departement + '        redir = '+ str(redir) + ', \n        cible = ' + str(target_faculte) + ', \n        }, \n    }, \n'
+  result = result + '}\n'  #[:-2]
   # STOP ici ajouter la table DEPARTEMENT dpt_fac AVANT RETURN P
   lua_table_departement = write_table_dpt() # La fonction ajoute la table des départements
   result = result + lua_table_departement
+  # Ajouter la table t_ns_106
+  lua_resume_namespace = write_resume_namespace_106()
+  result = result + lua_resume_namespace
   result = result + 'return p\n' ### page /documentatio \n[[Catégorie:Modules tests]]
   result = unicode(result, 'utf-8')
   return result
 
-### Fonction 5.1 - write_table_dpt() - Ecrit le code lua de la table dpt_fac
+# Fonction 5.1 - write_table_dpt() - Ecrit le code lua de la table dpt_fac
 def write_table_dpt():
-  lua_code = 'p.t_departements = {'   # la tables des DEPARTEMENTS à l'exception de toutes les autres pages 
-  for departement in dpt_fac:
-    lua_code = lua_code + '{'
+  lua_code = 'p.t_departements = {\n    '   # la tables des DEPARTEMENTS à l'exception de toutes les autres pages 
+  for departement in sorted(dpt_fac):
     [redir, target_departement, l_fac] = dpt_fac[departement]
-    lua_code = lua_code + str(departement) + ', '
+    lua_code = lua_code + '{'
+    lua_code = lua_code + str(departement) + ', \n'
     if len(l_fac) == 0:
-      lua_code = lua_code + '{}, '
+      lua_code = lua_code + '{}, \n'
     else:
-      lua_code = lua_code + '{'
+      lua_code = lua_code + '        {'
       for faculte in l_fac:
 	lua_code = lua_code + str(faculte) + ', '
-      lua_code = lua_code[:-2] + '}, ' 
-    lua_code = lua_code + str(redir) + ', ' + str(target_departement) + '}, '
-  lua_code = lua_code[:-2] + '}\n'
+      lua_code = lua_code + '}, \n        ' 
+    lua_code = lua_code + str(redir) + ', ' + str(target_departement) + '\n    }, \n'
+  lua_code = lua_code + '}\n'
   return lua_code
+# Fonction 5.2 write_t_ns_106() _ Ecrit le code Lua de la table 
+def write_resume_namespace_106():
+  lua_code = 'p.t_ns_106 = {\n'
+  for i in liste_ns_106:
+    lua_code = lua_code + '   ' + str(i) + ', \n'
+  lua_code = lua_code + '}'
+  return lua_code   
 ###
 
 ### Etape-1
@@ -229,45 +174,16 @@ print str(nombre_faculte) + ' Facultés\nListe des départements pour chaque fac
 data_fac = tuplefac() # Calcul les propriete des facultés
 ### Etape-3
 dpt_fac = tupleinvert() # Inverse le tuple, calcul le nb de dpt
-### Etape-4 Edition des pages
-#writelistfac()
-#writelistdpt()
-#writelistdpt2()
-
-
-
+### TEST
+#print '#########'
+#for i in liste_ns_106:
+#  print i
 ### Etape 5 - Ecriture du module Lua-scribunto "Module:Table faculté"
 code_module = write_module()
 
-print code_module
-title = u'Module:Table faculté' #u'Module:Catest' #
+# print code_module
+title = u'Module:Table faculté' #u'Module:Catest' # ATTENTION 
 comment = u'Le module reçoit les données depuis le srcipt Python "fac.py" (cf vocabulary-index on Wikimedia Tool Labs).'
 page = pywikibot.Page(site, title)
 page.text = code_module
 page.save(comment)
-
-### Ecriture fichier csv abandonnée
-#fFac = open('Fac.csv', 'w')
-#fFac.write('Faculté, Nombre département(s)\n') # en_tête liste Facultés | départements
-#print str(totalDpt) + ' dept répartis dans les facultés' #  Ce total ne tient pas compte des doublons ( 1 dept=> +2 Fac)
-#fFac.close()
-
-### ecriture des valeurs comme argument ABANDONNEE.
-### Ecriture via module(args) test1
-# Nous parvenons a formater les argument dans une table mais 
-# impossible d'utliser cette tabe sans lui passer tous les arguments de nouveaux
-# {{#Invoke:Catest|facdata|
-#result = '{{#Invoke:Catest|facdata|'
-#for fac in data_fac:
-  #[sous_page_fac, nb_sous_page_fac, gen_dpt, nombre_departement, redir, target_faculte] = data_fac[fac]
-  #uuu = '|' + str(nb_sous_page_fac) + '|' + str(nombre_departement) + '|' + str(sous_page_fac) + '|\n'
-  #result = result + str(fac) + uuu
-  #for departement in gen_dpt:
-    #result = result + '\n' + '* ' + str(departement) + '\n'
-  #result = result + '|'
-#result = result + '}}'
-#title = u'Projet:Laboratoire/Propositions/Espace de nom Faculté/Test'
-#page = pywikibot.Page(site, title)
-#page.text = unicode(result, 'utf-8')
-#comment = 'Tentative pour passer les données Python vers un module Lua Scribunto'
-#page.save(comment)

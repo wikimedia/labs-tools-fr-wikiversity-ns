@@ -1,0 +1,122 @@
+### FONCTIONS SUPPRIMEES ET SAUVEGARDEE ICI
+### FAC.PY ECRITURES DES TABLEAUX TRIABLE SOUS FORME DE NOUVELLE PAGE
+### ECRITURE DE FICHIERS CSV
+
+#FAC.PY
+### Variables edition de pages INUTILE
+#title_list_fac = u"Projet:Laboratoire/Propositions/Espace de nom Faculté/Liste des facultés"
+#title_list_dpt = u"Projet:Laboratoire/Propositions/Espace de nom Faculté/Liste des départements par faculté"
+#title_list_dpt2 = u"Projet:Laboratoire/Propositions/Espace de nom Faculté/Liste des départements"
+### Fonctions Etape-4: Edition des pages
+def writelistfac():
+  page_txt = u"{{Titre|Liste des facultés (automatique)}}\n"
+  page_txt = page_txt + u'{|class="wikitable sortable"\n!Faculté\n!Nombre de département\n!Nombre de sous pages\n|-\n'
+  tableau_txt = u'' # initialise le tableau
+  for faculte in data_fac:
+    fac_params = data_fac[faculte]
+    [sous_page_fac, nb_sous_page_fac, gen_dpt, nombre_departement, redir, target_faculte] = fac_params
+    line_fac = '|' + str(faculte) + '\n|' + str(nombre_departement) + '\n|' + str(nb_sous_page_fac) + '\n|-\n'
+    line_fac = unicode(line_fac, 'utf-8')
+    tableau_txt = tableau_txt + line_fac # ajoute la ligne
+  page_txt = page_txt + tableau_txt + '|}\n'
+  page_txt = page_txt + u'[[Catégorie:Laboratoire]]'
+  comment = u'Analyse de l\'espace de noms Faculté - fr:wv'
+  title = title_list_fac
+  page = pywikibot.Page(site, title) # PWB variable
+  page.text = page_txt
+  page.save(comment) 
+
+def writelistdpt():
+  title = title_list_dpt
+  page_txt = u"{{Titre|Liste des départements par facultés (automatique)}}\n<small>fac.py</small>\n"
+  section_txt = u''
+  for faculte in data_fac:
+    fac_params = data_fac[faculte]
+    [sous_page_fac, nb_sous_page_fac, gen_dpt, nombre_departement, redir, target_faculte] = fac_params
+    ### modifier la variable str_faculte pour ajouter le label
+    line_txt = "== " + str(faculte) + " ==\n"
+    line_txt = unicode(line_txt, 'utf-8')
+    section_txt = section_txt + line_txt
+    dpt_txt = u''
+    for departement in gen_dpt:
+      line_txt = "* " + str(departement) + "\n"
+      line_txt = unicode(line_txt, 'utf-8')
+      dpt_txt = dpt_txt + line_txt
+    section_txt = section_txt + dpt_txt
+  page_txt = page_txt + section_txt + u"[[Catégorie: Laboratoire]]"
+  page = pywikibot.Page(site, title) # PWB variable
+  page.text = page_txt
+  comment = u'Liste des départements par facultés'
+  page.save(comment) 
+
+def writelistdpt2(): 
+  title = title_list_dpt2
+  page_txt = u"{{Titre|Liste des départements (automatique)}}\n<small>fac.py</small>\n"
+  page_txt = page_txt + u'{|class="wikitable sortable"\n!Département\n!Nombre de facultés\n!Facultés\n!Redirection\n!Redirige vers\n|-\n'
+  tableau = u''
+  for departement in dpt_fac:
+    dpt_params = dpt_fac[departement]
+    [redir, target_departement, l_fac] = dpt_params
+    nb_fac_dep = len(l_fac)
+    fac_txt = ''
+    for fac in l_fac:      
+      fac_txt = fac_txt + str(fac) + ' '
+    line_txt = "|" + str(departement) + "\n|" + str(nb_fac_dep) + "\n|" + fac_txt + "\n|" + str(redir) + "\n|" + str(target_departement) + "\n|-\n"
+    
+    #fac_txt = unicode(fac_txt, 'utf-8')
+    line_txt = unicode(line_txt, 'utf-8') #+ fac_txt + "\n|-\n"
+    tableau = tableau + line_txt
+  page_txt = page_txt + tableau + u"|}\n[[Catégorie:Laboratoire]]"
+  page = pywikibot.Page(site, title) # PWB variable
+  page.text = page_txt
+  comment = u'Liste des facultés par départements'
+  page.save(comment) 
+
+### Ecriture fichier csv abandonnée
+fFac = open('Fac.csv', 'w')
+fFac.write('Faculté, Nombre département(s)\n') # en_tête liste Facultés | départements
+print str(totalDpt) + ' dept répartis dans les facultés' #  Ce total ne tient pas compte des doublons ( 1 dept=> +2 Fac)
+fFac.close()
+
+### ecriture des valeurs comme argument ABANDONNEE.
+### Ecriture via module(args) test1
+# Nous parvenons a formater les argument dans une table mais 
+# impossible d'utliser cette tabe sans lui passer tous les arguments de nouveaux
+# {{#Invoke:Catest|facdata|
+#result = '{{#Invoke:Catest|facdata|'
+for fac in data_fac:
+  [sous_page_fac, nb_sous_page_fac, gen_dpt, nombre_departement, redir, target_faculte] = data_fac[fac]
+  uuu = '|' + str(nb_sous_page_fac) + '|' + str(nombre_departement) + '|' + str(sous_page_fac) + '|\n'
+  result = result + str(fac) + uuu
+  for departement in gen_dpt:
+    result = result + '\n' + '* ' + str(departement) + '\n'
+  result = result + '|'
+result = result + '}}'
+title = u'Projet:Laboratoire/Propositions/Espace de nom Faculté/Test'
+page = pywikibot.Page(site, title)
+page.text = unicode(result, 'utf-8')
+comment = 'Tentative pour passer les données Python vers un module Lua Scribunto'
+page.save(comment)
+
+### Etape-4 Edition des pages
+#writelistfac()
+#writelistdpt()
+#writelistdpt2()
+
+
+# DPT.PY
+# DEPLACER old_code.sav
+#page_txt = u"{{Titre|Liste des pages de l'espace de noms Départements}}\n"
+#page_txt = page_txt + u'{|class="wikitable sortable"\n!Départements\n!Sous-pages\n!Redir\n!Leçons thèmes\n!Leçons niveaux\n!Ajouter\n!Total liens\n!Page existe\n!Balance\n|-\n'
+#for departement in data_dpt:
+  #dpt_params = data_dpt[departement]
+  #[sous_pages, redir, target_page, list_link_theme, list_link_niveau, list_link_add, list_link_total, list_link_exist, balance] = dpt_params
+
+  #line = '\n|' + str(departement) + '\n|' + str(len(sous_pages)) + '\n|' + str(redir) + '\n|' + str(len(list_link_theme)) + '\n|' + str(len(list_link_niveau) ) + '\n|' + str(len(list_link_add) ) + '\n|' + str(len(list_link_total)) + '\n|' + str(len(list_link_exist))  +  '\n|' + '('+str(balance) + ')\n|-\n'
+  #page_txt = page_txt + unicode(line, 'utf-8')
+#page_txt = page_txt + u'|}\n[[Catégorie:Laboratoire]]'
+#title = title_tableau
+#page = pywikibot.Page(site, title)
+#comment = "Liste des pages de l'espace de noms Département"
+#page.text = page_txt
+#page.save(comment)
