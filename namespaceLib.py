@@ -55,7 +55,7 @@ def ns_list_page(dict_page):
     witxt = witxt +  u'\n|-\n|' + str(index) + '\n|' + unicode(page) + '\n|' + str(nb_sep) + '\n|' + unicode(cible)
   witxt = witxt + '\n|}'
   return witxt
-### La fonction ghet_root() 
+### La fonction get_root() 
 #   Isole les pages racines dans dict_racine, les sous-pages dans dict_sub
 ### Retourne un dictionnaire des pages root aves la liste des sous-pages associée
 dict_racine = {}
@@ -96,3 +96,44 @@ def write_list_root(dict_racine):
     witxt = witxt +  u'\n|-\n|' + str(index) + '\n|' + unicode(racine) + '\n|' + str(len(list_sub)) #+ '\n|'  + unicode(cible)
   witxt = witxt + '\n|}'
   return witxt
+
+
+### write_module() écrit un module vide
+#
+def write_module(module_name, lua_code): # Compiler tout le code du module au préalabe
+  title = u'Module:'
+  # UNICODE
+  title = title + module_name
+  comment = u'Nouveau module ajouté par l\'outil fr-wikiversity-ns sur tools.labs.org'
+  module = 'local p = {}\n'
+  module = module + lua_code
+  module = module + '\nreturn p'
+  page = pywikibot.Page(site, title)
+  page.text = module
+  page.save(comment) # TRY
+  
+
+### write_t_prop() écrit la table des propriétés de l'espace de noms
+#   retourne une table au format clé = valeur
+# 
+def write_t_prop(ns_id, prop):
+  [c, c_redir, c_racine, c1,c2, c3, verif, dict_page, ns_id] = prop #Rev.5
+  t = 'p.t' + str(ns_id) + '_prop = {'
+  t = t + 'total = ' + str(c)  + ', '
+  t = t + 'nb_redir = ' + str(c_redir) + ', '
+  t = t + 'nb_racine = ' + str(c_racine) + ', '
+  t = t + 'c1 = ' + str(c1) + ', '
+  t = t + 'c2 = ' + str(c2) + ', '
+  t = t + 'c3 = ' + str(c3) + ', '
+  t = t + '}\n'
+  return t
+
+### write_t_pages() reçoit le dictionnaire Python 
+#   pour le transformer en code Lua de la table t_pages
+def write_t_pages(page_prop):
+  t = 'p.t_pages = {\n'
+  for page in page_prop:
+    [nb_sep, cible] = page_prop[page]
+    t = t + '    {page = ' + str(page) + ', nsep =' + str(nb_sep) + ', ' + str(cible) + '},\n'
+  t = t + '}\n'
+  return t

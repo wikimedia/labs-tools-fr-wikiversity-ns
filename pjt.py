@@ -41,37 +41,11 @@ dict_racine = get_root(dict_page) # Uniquement les pages root avec leur sous-pag
 #page.text = witxt
 #page.save(comment)  # ATTENTION
 
-### write_module() écrit un module vide
-#
-def write_module(module_name, lua_code): # Compiler tout le code du module au préalabe
-  title = u'Module:'
-  # UNICODE
-  title = title + module_name
-  comment = u'Nouveau module ajouté par l\'outil fr-wikiversity-ns sur tools.labs.org'
-  module = 'local p = {}\n'
-  module = module + lua_code
-  module = module + '\nreturn p'
-  page = pywikibot.Page(site, title)
-  page.text = module
-  page.save(comment) # TRY
-  
-
-### write_t_prop() écrit la table des propriétés de l'espace de noms
-#   retourne une table au format clé = valeur
-# 
-def write_t_prop():
-  t = 'p.t' + str(ns_id) + '_prop = {'
-  t = t + 'total = ' + str(c)  + ', '
-  t = t + 'nb_redir = ' + str(c_redir) + ', '
-  t = t + 'nb_racine = ' + str(c_racine) + ', '
-  t = t + 'c1 = ' + str(c1) + ', '
-  t = t + 'c2 = ' + str(c2) + ', '
-  t = t + 'c3 = ' + str(c3) + ', '
-  t = t + '}\n'
-  return t
-
-lua_code = write_t_prop()  
+lua_code = write_t_prop(ns_id, prop)  
+table_code =  write_t_pages(page_prop)
+lua_code = lua_code + table_code
 # Concatener le code Lua ici
+lua_code = unicode(lua_code, 'utf-8')
 module_name = u'ns_' + ns_label
 write_module(module_name, lua_code)
   
