@@ -13,7 +13,7 @@ site = pywikibot.Site(lang, family)
 ### return total pages, redirections number, rootpages number, subpages numbers by level 1,2,more  
 ### scan pages properties: number of separators, redirection_target ; returned in a dict
 def ns_prop(ns_id):
-  gen_hlp = site.allpages(namespace=ns_id)
+  gen_hlp = site.allpages(namespace=ns_id) #VARNAME gen_all
   c, c_redir, c_racine, c1, c2, c3= 0, 0, 0, 0, 0, 0
   resep = re.compile('/')
   dict_page = {}
@@ -40,7 +40,7 @@ def ns_prop(ns_id):
     page_prop = [nb_sep, cible]
     dict_page[page] = page_prop
   verif = (c-c_racine-c1-c2-c3)
-  prop=[c, c_redir, c_racine, c1,c2, c3, verif, dict_page]
+  prop=[c, c_redir, c_racine, c1,c2, c3, verif, dict_page, ns_id]
   return prop
 ### ns_list_page() reçoit le dictionnaire des pages associé aux propriétés
 #   retourne le wikitexte contenant

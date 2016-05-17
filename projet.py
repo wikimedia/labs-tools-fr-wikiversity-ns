@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8  -*-
 
-import pywikibot, re, sys
+import pywikibot, re #Rev.5#, sys
 from namespaceLib import *
 
 ### Outil d'analyse et report de données sur l'espace de noms numero 4 Project-Wikiversité
@@ -9,67 +9,86 @@ from namespaceLib import *
 
 lang = 'fr'       
 family = 'wikiversity'
-site = pywikibot.Site(lang, family)  
+site = pywikibot.Site(lang, family)
 
-prop = ns_prop(sys.argv[1])
-[c, c_redir, c_racine, c1,c2, c3, verif, dict_page] = prop
-print prop[0]
-print prop[1]
-print prop[2]
-print prop[3]
-print prop[4]
-print prop[5]
+ns_id = 102   #Rev.5
+ns_label = site.namespace(ns_id) # Label local du namespace
+
+title = u' Projet:Laboratoire/Espaces de noms/' # + Projet/
+
+prop = ns_prop(ns_id)
+[c, c_redir, c_racine, c1,c2, c3, verif, dict_page, ns_id] = prop #Rev.5
+print ns_id # ns_id
+print c # total page VARNAME
+print c_redir # Redirections
+print prop[2] # root pages
+print prop[3] # sub-peges lev.1
+print prop[4] # sub-pages lev.2
+print prop[5] # sub-pages more level
 print '-----'
-print prop[6] 
+print prop[6] # Verif
 
-page_prop = dict_page
+page_prop = dict_page             # Toute les pages et leur propriétés
 
-title = u' Projet:Laboratoire/Espaces de noms/Wikiversité/'
+dict_racine = get_root(dict_page) # Uniquement les pages root avec leur sous-page
 
-### Isole les pages racines dans dict_racine
-### les sous-pages dans dict_sub
-dict_racine = {}
-dict_sub = {}
-for page in dict_page:
-  page_prop = dict_page[page]
-  nb_sep = page_prop[0]
-  page = unicode(page)
-  if nb_sep == 0:
-    dict_racine[page] = page_prop
-  else:
-    dict_sub[page] = page_prop
-for racine in dict_racine:
-  list_sub = []
-  prefix = racine[:-2] # ]]
-  for sub in dict_sub:
-    if prefix in sub:
-      list_sub.append(sub)
-  dict_racine[racine] = list_sub
+#witxt = write_list_root(dict_racine)
+#print witxt  # TEST
+#title = title + ns_label + '/Liste des pages'
+#comment = u'Ecrit la liste des pages racines de l\'espace de noms avec le nombre de sous-pages- youni_verciti_bot'
+#witxt = witxt + u'[[Catégorie:Laboratoire]]'
+#page = pywikibot.Page(site, title)
+#page.text = witxt
+#page.save(comment)  # ATTENTION
 
-for racine in dict_racine:
-  list_sub = dict_racine[racine]
-  #print k
-  print len(list_sub)
-  for sub in list_sub:
-    print sub
+### write_module() écrit un module vide
+#
+def write_module(module_name, lua_code): # Compiler tout le code du module au préalabe
+  title = u'Module:'
+  # UNICODE
+  title = title + module_name
+  comment = u'Nouveau module ajouté par l\'outil fr-wikiversity-ns sur tools.labs.org'
+  module = 'local p = {}\n'
+  module = module + lua_code
+  module = module + '\nreturn p'
+  page = pywikibot.Page(site, title)
+  page.text = module
+  page.save(comment) # TRY
+  
 
-def ns_list_racine(dict_racine):
-  index = 0
-  witxt = '{|class="wikitable sortable"\n!Index\n!Nom\n!Nombre de sous-pages' #\n!Cible
-  for racine in sorted(dict_racine):
-    index = index + 1
-    list_sub = dict_racine[racine]
-    witxt = witxt +  u'\n|-\n|' + str(index) + '\n|' + unicode(racine) + '\n|' + str(len(list_sub)) #+ '\n|'  + unicode(cible)
-  witxt = witxt + '\n|}'
-  return witxt
+### write_t_prop() écrit la table des propriétés de l'espace de noms
+#   retourne une table au format clé = valeur
+# 
+def write_t_prop():
+  t = 'p.t' + str(ns_id) + '_prop = {'
+  t = t + 'total = ' + str(c)  + ', '
+  t = t + 'nb_redir = ' + str(c_redir) + ', '
+  t = t + 'nb_racine = ' + str(c_racine) + ', '
+  t = t + 'c1 = ' + str(c1) + ', '
+  t = t + 'c2 = ' + str(c2) + ', '
+  t = t + 'c3 = ' + str(c3) + ', '
+  t = t + '}\n'
+  return t
 
-witxt = ns_list_racine(dict_racine)
-print witxt
-
-title = title + 'Liste des pages'
-comment = u'Ecrit la liste des pages racines de l\'espace de noms avec leur nombre sous-pages- youni_verciti_bot'
-witxt = witxt + u'[[Catégorie:Laboratoire]]'
-#print witxt # TEST
-page = pywikibot.Page(site, title)
-page.text = witxt
-page.save(comment)  # ATTENTION
+lua_code = write_t_prop()  
+# Concatener le code Lua ici
+module_name = u'ns_' + ns_label
+write_module(module_name, lua_code)
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
