@@ -14,7 +14,7 @@ site = pywikibot.Site(lang, family)
 ### scan pages properties: number of separators, redirection_target ; returned in a dict
 def ns_prop(ns_id):
   gen_hlp = site.allpages(namespace=ns_id) #VARNAME gen_all
-  c, c_redir, c_racine, c1, c2, c3= 0, 0, 0, 0, 0, 0
+  Total, Redirection, Racine, sous_page= 0, 0, 0, 0 #, 0, 0
   resep = re.compile('/')
   dict_page = {}
   cible = ''
@@ -22,25 +22,25 @@ def ns_prop(ns_id):
     cible = ''
     nb_sep = 0
     page_prop = []
-    c=c+1
+    Total=Total+1
     redir = page.isRedirectPage()
     if redir == True:
 	  cible= page.getRedirectTarget()
-	  c_redir = c_redir +1
+	  Redirection = Redirection +1
     regen = re.findall(resep, str(page))
     nb_sep = len(regen)
     if nb_sep<1 :
-      c_racine = c_racine + 1      
-    elif nb_sep==1:
-      c1 = c1+1
-    elif nb_sep>1:
-      c2 = c2+1
+      Racine = Racine + 1      
+    #elif nb_sep==1:
+      #Sub1 = Sub1+1
+    #elif nb_sep>1:
+      #Sub2 = Sub2+1
     else:      
-      c3 = c3 +1
+      sous_page = sous_page +1
     page_prop = [nb_sep, cible]
     dict_page[page] = page_prop
-  verif = (c-c_racine-c1-c2-c3)
-  prop=[c, c_redir, c_racine, c1,c2, c3, verif, dict_page, ns_id]
+  verif = (Total-Racine-sous_page)
+  prop=[Total, Redirection, Racine, sous_page, verif, dict_page, ns_id]
   return prop
 ### ns_list_page() reçoit le dictionnaire des pages associé aux propriétés
 #   retourne le wikitexte contenant
@@ -58,6 +58,7 @@ def ns_list_page(dict_page):
 ### La fonction get_root() 
 #   Isole les pages racines dans dict_racine, les sous-pages dans dict_sub
 ### Retourne un dictionnaire des pages root aves la liste des sous-pages associée
+### ATTENTION fonction à déplacer/transcrire dans le(s) module(s) "Namespace vues"
 dict_racine = {}
 dict_sub = {}
 def get_root(dict_page):
@@ -117,14 +118,15 @@ def write_module(module_name, lua_code): # Compiler tout le code du module au pr
 #   retourne une table au format clé = valeur
 # 
 def write_t_prop(ns_id, prop):
-  [c, c_redir, c_racine, c1,c2, c3, verif, dict_page, ns_id] = prop #Rev.5
-  t = 'p.t' + str(ns_id) + '_prop = {'
-  t = t + 'total = ' + str(c)  + ', '
-  t = t + 'nb_redir = ' + str(c_redir) + ', '
-  t = t + 'nb_racine = ' + str(c_racine) + ', '
-  t = t + 'c1 = ' + str(c1) + ', '
-  t = t + 'c2 = ' + str(c2) + ', '
-  t = t + 'c3 = ' + str(c3) + ', '
+  [Total, Redirection, Racine, sous_page, verif, dict_page, ns_id] = prop #Rev.5
+  t = 'p.t_prop = {'   # ' + str(ns_id) + ' ##  SIMPLIFICATION NECESSAIRE
+  t = t + 'Total = ' + str(Total)  + ', '
+  t = t + 'Redirection = ' + str(Redirection) + ', '
+  t = t + 'Racine = ' + str(Racine) + ', '
+  t = t + 'Sous_page = ' + str(sous_page) + ', '
+  t = t + 'Identifiant = ' + str(ns_id) + ', '
+  #t = t + 'Sub1 = ' + str(Sub1) + ', '
+  #t = t + 'Sub2 = ' + str(Sub2) + ', '
   t = t + '}\n'
   return t
 

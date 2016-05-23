@@ -1,23 +1,23 @@
 #!/usr/bin/env python
 # -*- coding: utf-8  -*-
 
-import pywikibot, re #, sys
+import pywikibot, re, sys
 from namespaceLib import *
-### Outil d'analyse et report de données sur l'espace de noms Aide de la Wikiversité francophone
+
+### Outil d'analyse et report de données sur l'espace de noms numero 4 Project-Wikiversité
+### Licence CeCiLL voir Licence.txt
+
 lang = 'fr'       
 family = 'wikiversity'
 site = pywikibot.Site(lang, family)  
+title = u' Projet:Laboratoire/Espaces de noms/'
 
-ns_id = 12   #Rev.5
-ns_label = site.namespace(ns_id) # Label local du namespace
-title = u' Projet:Laboratoire/Espaces de noms/' # Chemin de base pour les listes Python
-
+ns_id = 110   #Rev.5
 ### ETAPE 1 
 #   
 ns_label = site.namespace(ns_id) # Label local du namespace
 prop = ns_prop(ns_id)
 [total, redirection, racine, sous_page, verif, dict_page, ns_id] = prop
-
 
 page_prop = dict_page
 
@@ -29,3 +29,12 @@ lua_code = unicode(lua_code, 'utf-8')
 module_name = u'ns_' + ns_label
 write_module(module_name, lua_code)    ### Ecriture du module
 ### FIN ETAPE 1
+### DEBUG
+#print prop[0]
+#print prop[1]
+#print prop[2]
+#print prop[3]
+#print prop[4]
+#print prop[5]
+#print '-----'
+#print prop[6] 

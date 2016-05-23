@@ -1,16 +1,20 @@
 #!/usr/bin/env python
 # -*- coding: utf-8  -*-
 
-import pywikibot, re #, sys
+import pywikibot, re, sys
 from namespaceLib import *
-### Outil d'analyse et report de données sur l'espace de noms Aide de la Wikiversité francophone
+
+### Outil d'analyse et report de données sur l'espace de noms numero 4 Project-Wikiversité
+### Licence CeCiLL voir Licence.txt
+
 lang = 'fr'       
 family = 'wikiversity'
 site = pywikibot.Site(lang, family)  
 
-ns_id = 12   #Rev.5
+ns_id = 104   #Rev.5
 ns_label = site.namespace(ns_id) # Label local du namespace
-title = u' Projet:Laboratoire/Espaces de noms/' # Chemin de base pour les listes Python
+
+title = u' Projet:Laboratoire/Espaces de noms/'
 
 ### ETAPE 1 
 #   
