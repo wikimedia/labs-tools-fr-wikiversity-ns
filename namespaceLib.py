@@ -4,7 +4,7 @@
 
 ### Librairie de fonctions relatives aux espace de noms en général
 ### de la Wikiversité francophone en particulier
-import pywikibot, re, sys
+import pywikibot, re   ###, sys
 lang = 'fr'       
 family = 'wikiversity'
 site = pywikibot.Site(lang, family)  

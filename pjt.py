@@ -1,26 +1,27 @@
 #!/usr/bin/env python
 # -*- coding: utf-8  -*-
 
-import pywikibot, re #Rev.5#, sys
+import pywikibot ###, re #Rev.5#, sys
 from namespaceLib import *
 
-### Outil d'analyse et report de données sur l'espace de noms numero 4 Project-Wikiversité
+### Outil d'analyse et report de données sur l'espace de noms numero 102 - Projet - Projet
 ### Licence CeCiLL voir Licence.txt
 
 lang = 'fr'       
 family = 'wikiversity'
 site = pywikibot.Site(lang, family)
-
 ns_id = 102   #Rev.5
-ns_label = site.namespace(ns_id) # Label local du namespace
+
 
 ### ETAPE 1 
 #   
+ns_label = site.namespace(ns_id) # Label local du namespace
 prop = ns_prop(ns_id)   # Scan l'espace de noms renvoi liste de propriétés contenant dictionnaire de pages
 prop.append(ns_label)   # ajoute le label local de l'espace à la liste des propriétés
 prop.append(lang)       # prefix fr:
 [total, redirection, racine, sous_page, verif, dict_page, ns_id, ns_label, lang] = prop
-### COLLECTER LES DATE 1ere REVISION POUR	fr:Projet:Wikiversité/
+### ETAPE 2
+#   COLLECTER LES DATE 1ere REVISION POUR Projet:Wikiversité
 get_date_for = [u'Wikiversité',] # UNICODE
 for page in dict_page:
   name = unicode(page)

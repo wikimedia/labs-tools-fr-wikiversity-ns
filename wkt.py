@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8  -*-
 
-import pywikibot, re, sys
+import pywikibot #, re, sys
 from namespaceLib import *
 
 ### Outil d'analyse et report de données sur l'espace de noms numero 4 Project-Wikiversité
@@ -10,7 +10,6 @@ from namespaceLib import *
 lang = 'fr'       
 family = 'wikiversity'
 site = pywikibot.Site(lang, family)  
-
 ns_id = 4  #Rev.5 
 
 ### ETAPE 1 - Fonctions communes à tous les espaces de noms

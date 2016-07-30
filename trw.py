@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8  -*-
 
-import pywikibot,  sys
+import pywikibot
 from namespaceLib import *
 
 ### Outil d'analyse et report de données sur l'espace de noms numero 110 Tanswiki

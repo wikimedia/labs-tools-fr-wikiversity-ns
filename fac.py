@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8  -*-
-import pywikibot, re, sys
+import pywikibot ###, re
 from namespaceLib import *
 ### Outil d'analyse et report de données sur l'espace de noms numero 4 Project-Wikiversité
 ### Licence CeCiLL voir Licence.txt
