@@ -100,7 +100,7 @@ table_code =  write_dpt(dict_page)     # la table des pages
 # Concatener le code Lua ici           # ATTENTION Ajouter les dates et utilisateur pour départe
 lua_code = lua_code + table_code       
 module_name = u'ns_' + ns_label        # Nom du module contment videenant le code des tables Lua
-print lua_code
+# print lua_code
 write_module(module_name, lua_code)    ### Ecriture du module
 
 
