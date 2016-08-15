@@ -20,7 +20,7 @@ def check_lessons_in_sp(page, string):
   page = pywikibot.Page(site, title)
   exist = page.exists()
   if exist:
-    gen = get_linked_p(page, 0)
+    gen = get_linked_p(page, 0) # titre de la page et namespace id
   else:
     gen = []
   return gen

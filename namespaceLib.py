@@ -32,7 +32,7 @@ def ns_prop(ns_id):
       Racine = Racine + 1      # Compteur de pages racines
     else:                      # Separateur
       sous_page = sous_page +1 # Compteur de sous-pages
-    date = '' #TEST 
+    date = '' #TEST MAUVAISE SOLUTION
     page_prop = [nb_sep, date, cible]  # TRANFORMER EN TUPLES
     dict_page[page] = page_prop        # LISTE contenant 2 LISTES
   verif = (Total-Racine-sous_page)     # voir calc man dpt
@@ -77,6 +77,32 @@ def write_t_pages(dict_page):
   t = t + '}\n'
   t = unicode(t, 'utf_8')
   return t
+
+### test 
+#   ecriture table des pages
+def w_t_pages(dict_page):
+  t = 'p.t_pages = {\n'
+  code = w_pages(dict_page)
+  t = t + code + '}\n'
+  t = unicode(t, 'utf_8')
+  return t
+def w_pages(d_pages):
+  t = '' # variable pour le code de la table
+  for page in d_pages:
+    t = t + '{page = ' + str(page) + ', ' #
+    d_prop = d_pages[page]
+    for prop in d_prop:       # pour chaque propriété 
+      prop_value = d_prop[prop]    # la valeur de la propriété
+      if type(prop_value) == list: # pour les listes
+	t = t +  prop + ' = ' + list_to_lua(prop_value) # ATTENTION + ', ' # imprimer la liste
+      elif prop == 'date1': # ATTENTION MAUVAISE SOLUTION
+	t = t +  prop + ' = \'' + str(prop_value) + '\', ' # ajouter de guillemets
+      else:
+	t = t + prop + ' = ' + str(prop_value) + ', ' # le nom et la valeur de la propriété
+    t = t + '},\n' # ferme la table pour la page_prop
+  return t # retourne le code Lua pour la table des pages
+### Fin tests
+
 
 def write_t_pages2(dict_page): # POUR NS FACULTES
   t = 'p.t_pages = {\n'
