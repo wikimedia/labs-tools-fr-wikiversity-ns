@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8  -*-
 
-import pywikibot ###, re #Rev.5#, sys
+import pywikibot 
 from namespaceLib import *
 
 ### Outil d'analyse et report de données sur l'espace de noms numero 102 - Projet - Projet
@@ -11,7 +11,6 @@ lang = 'fr'
 family = 'wikiversity'
 site = pywikibot.Site(lang, family)
 ns_id = 102   #Rev.5
-
 
 ### ETAPE 1 
 #   

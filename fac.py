@@ -34,7 +34,6 @@ def tupleinvert():
           l_fac.append(page)             # Ajoute la faculté dans la liste
   return dpt_fac
 
-
 ### ETAPE 1 
 #   
 ns_label = site.namespace(ns_id) # Label local du namespace
@@ -42,8 +41,9 @@ prop = ns_prop(ns_id)            #
 prop.append(ns_label)            # ajoute le label local de l'espace à la liste des propriétés
 prop.append(lang)                # ajoute le code langue pour former le préfixe des filtres
 [total, redirection, racine, sous_page, verif, dict_page, ns_id, ns_label, lang] = prop
-### La date d’importation via l’historique avec le résumé suivant: (00 révisions importées depuis…
+
 lua_code = write_t_prop(ns_id, prop)  ### la table des propriétés de l'espace de noms
+
 ### AMeLIORER cherche les liens vers les departements
 #   la page ~/Dépatements est transcluse dans la page de chaque faculté
 #   dont on récupère les liens vers ns(108)
@@ -56,8 +56,8 @@ for page in dict_page:
     page_prop.append(list_dpt)         # ajoute listes departement aux propriétés de la faculté      
     for dpt in list_dpt:               # pour chaque département
       count_dpt = count_dpt + 1        # Compte le nombre de dṕartement
-  else:                                 # La page est une sous-page
-    list_dpt = []                       # il faut une valeur 0
+  else:                                # La page est une sous-page
+    list_dpt = []                      # il faut une valeur 0
     page_prop.append(list_dpt)  # ajoute listes departement aux propriétés de la faculté
   page_prop.append(count_dpt)   # ajoute le nombre de départements aux propriétés
   dict_page[page] = page_prop

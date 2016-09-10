@@ -38,7 +38,6 @@ prop = ns_prop(ns_id)
 prop.append(ns_label)            # ajoute le label local de l'espace à la liste des propriétés
 prop.append(lang)                # ajoute le code langue pour former le préfixe des filtres
 [total, redirection, racine, sous_page, verif, dict_page, ns_id, ns_label, lang] = prop
-### La date d’importation via l’historique avec le résumé suivant: (00 révisions importées depuis…
 
 merged = merge_sub(dict_page)
 [dict_racine, dict_sub] = merged
@@ -91,9 +90,6 @@ for page in dict_sub:        # les propriétes des sous-pages doivent correspond
   d_lesson['l_exist'] = lesson_exist
   page_prop.append(d_lesson)
   dict_sub[page] = page_prop # met à jour les propriétés dans sub_dict (lié à dict_page)
-
-
-### Verifier les catégories avec Lua?
 
 lua_code = write_t_prop(ns_id, prop)   # la table des propriétés de l'espace de noms
 table_code =  write_dpt(dict_page)     # la table des pages

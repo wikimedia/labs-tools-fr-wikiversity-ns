@@ -36,7 +36,9 @@ for page in dict_page:
       get_date = first_rev.timestamp   # copie la valeur date et heure de création
       page_prop[1] = get_date          # place la date dans la liste à l'indice correspondant
 ### FIN DATES
-
+### Ajouter une fonction pour le document Plan de l'espace
+#   collecter les liens présents sur la page <Projet:Laboratoire/Espaces de noms/Wikiversité/Plan>
+#   retourner une table ... trop compliquer ... chercher à obtenir la liste des liens avec Lua
 ### Etape 3 - Ecriture du module
 ns_prop_code = write_t_prop(ns_id, prop)        # la table des propriétés de l'espace de noms
 table_code =  write_t_pages(dict_page)          # la table des pages

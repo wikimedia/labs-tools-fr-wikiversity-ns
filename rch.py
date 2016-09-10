@@ -24,36 +24,39 @@ prop.append(lang)                # ajoute le code langue pour former le préfixe
 lua_code = write_t_prop(ns_id, prop)  ### la table des propriétés de l'espace de noms
 
 ### FIN ETAPE 1
-total_tr = 0
+#   La fonction s'appuie sur les pages "Recherche:Département"
+#   Elle devrait utiliser "Département:Département/Recherche"
+#   Conserver ici en mode provisoire
+total_tr = 0 #??
 for page in dict_page: # Analyse des départements de recherche
   page_prop = dict_page[page]
-  l_doc = []           # Liste des documents d erecherche liés à un dpt
+  l_doc = []           # Liste des documents de recherche liés à un dpt
   pref = "fr:Recherche:Département:"  # prefix des departement de recherche
   s = str(page)
   rdpt_tr = 0
   if pref in s and page_prop[0] == 0: # si departement de recherche
-    print page
-    gen = get_linked_p(page, 104)   # collecter les liens vers ns_104
+    #print page
+    gen = get_linked_p(page, 104)     # collecter les liens vers ns_104
     for doc in gen :        # chaque document de recherche
       l_doc.append(doc)     # est ajouté à la liste l_doc
       total_tr = total_tr+1 #TEST
       rdpt_tr=rdpt_tr+1     #TEST
-      print doc             #TEST
-    print rdpt_tr           #TEST
+      #print doc             #TEST
+    #print rdpt_tr           #TEST
   page_prop.append(l_doc)   # Ajoute la liste des doc de recherche à celle des prop de la page
   #print type(page_prop[1])
   d_prop = {}
   d_prop['nsep'] = page_prop[0]
   d_prop['date1'] = page_prop[1]
   d_prop['cible'] = page_prop[2]
-  d_prop['l_doc'] = page_prop[3]
+  d_prop['l_doc'] = page_prop[3]  # retourne la liste des documents de recherche
   dict_page[page] = d_prop
 
 table_code =  w_t_pages(dict_page)    ### la table des pages
 lua_code = lua_code + table_code       
 # Concatener le code Lua ici
 module_name = u'ns_' + ns_label
-print total_tr
+#print total_tr
 #print lua_code
 write_module(module_name, lua_code)    ### TEST Ecriture du module
 

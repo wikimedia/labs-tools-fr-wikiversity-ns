@@ -14,29 +14,29 @@ site = pywikibot.Site(lang, family)
 ### and the liste of pages including number of separators, redirection_target ; returned in a dict
 def ns_prop(ns_id):
   allpages = site.allpages(namespace=ns_id) # , limit=250  #TEST # générateur de toutes les pages de l'espace
-  Total, Redirection, Racine, sous_page= 0, 0, 0, 0 # initialise les prop de l'espace
+  total, redirection, racine, sous_page= 0, 0, 0, 0 # initialise les prop de l'espace
   resep = re.compile('/')     # Regex pour le separateur de sous-pages
   dict_page = {}              # Initialise le dictionnaire principal des pages
   for page in allpages:       # Traitement de chaque page du generateur
     cible = '\'non\''             # Initialise valeur pour cible de redirection
     nb_sep = 0                    # Initialise le nombre d eseparateur pour la page
     page_prop = []                # Initialise le LISTE des pages TRANFORMER EN TUPLE
-    Total=Total+1                 # Compteur de page
+    total=total+1                 # Compteur de page
     redir = page.isRedirectPage()    # Test si la page est une redirection
     if redir == True:                # OUI
       cible= page.getRedirectTarget()    # la cible devient la valeur redirigée
-      Redirection = Redirection +1       # compteur de redirections
+      redirection = redirection +1       # compteur de redirections
     regen = re.findall(resep, str(page)) # Cherche tous les separateurs dans le nom de la page
     nb_sep = len(regen)                  # determine le nombre de separateurs
     if nb_sep<1 :              # Pas de separateur
-      Racine = Racine + 1      # Compteur de pages racines
+      racine = racine + 1      # Compteur de pages racines
     else:                      # Separateur
       sous_page = sous_page +1 # Compteur de sous-pages
     date = '' #TEST MAUVAISE SOLUTION
     page_prop = [nb_sep, date, cible]  # TRANFORMER EN TUPLES
     dict_page[page] = page_prop        # LISTE contenant 2 LISTES
-  verif = (Total-Racine-sous_page)     # voir calc man dpt
-  prop=[Total, Redirection, Racine, sous_page, verif, dict_page, ns_id]
+  verif = (total-racine-sous_page)     # voir calc man dpt
+  prop=[total, redirection, racine, sous_page, verif, dict_page, ns_id]
   return prop
 
 ### write_module() écrit un module vide
@@ -55,15 +55,15 @@ def write_module(module_name, lua_code): # Compiler tout le code du module au pr
 ### write_t_prop() écrit la table des propriétés de l'espace de noms
 #   retourne une table au format clé = valeur
 def write_t_prop(ns_id, prop):
-  [Total, Redirection, Racine, sous_page, verif, dict_page, ns_id, ns_label, lang] = prop #Rev.5
+  [total, redirection, racine, sous_page, verif, dict_page, ns_id, ns_label, lang] = prop #Rev.5
   t = 'p.t_prop = {'   #  Ajouter LANG
-  t = t + 'Identifiant = ' + str(ns_id) + ', '
+  t = t + 'id = ' + str(ns_id) + ', '
   t = t + 'lang = \'' + lang + '\', '          # ATTENTION variables Lua
-  t = t + 'Label = \'' + ns_label + '\', '
-  t = t + 'Total = ' + str(Total)  + ', '
-  t = t + 'Racine = ' + str(Racine) + ', '
-  t = t + 'Sous_page = ' + str(sous_page) + ', '
-  t = t + 'Redirection = ' + str(Redirection) + ', '
+  t = t + 'label = \'' + ns_label + '\', '
+  t = t + 'total = ' + str(total)  + ', '
+  t = t + 'racine = ' + str(racine) + ', '
+  t = t + 'sous_page = ' + str(sous_page) + ', '
+  t = t + 'redirection = ' + str(redirection) + ', '
   t = t + '}\n'
   return t
 
@@ -188,9 +188,9 @@ def root_sub(merged):
     dict_root_sub[racine] = page_prop  # ajoutes les propriétés à la page racine
   return dict_root_sub
 
-def get_linked_p(source_p, ns): # collecte les pages liées vers ns sur la page source
-  gen = source_p.linkedPages(namespaces=ns)   # génère la liste des dpt à patir de la page fac
-  return gen                # retourne le générateur
+def get_linked_p(source_p, ns):              # collecte les pages liées vers ns sur la page source
+  gen = source_p.linkedPages(namespaces=ns)  # génère la liste des dpt à patir de la page fac
+  return gen                                 # retourne le générateur
 
 def get_target(page):
   redir = page.isRedirectPage()
