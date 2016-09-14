@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8  -*-
-
-import pywikibot ###, re #, sys
-from namespaceLib import *
-
 ### Outil d'analyse et report de données sur l'espace de noms Aide de la Wikiversité francophone
 ### Licence CeCiLL voir Licence.txt
+import pywikibot ###, re #, sys
+from namespace_lib import *
+from lua_mw_lib import *
 
 lang = 'fr'       
 family = 'wikiversity'
@@ -14,15 +13,15 @@ ns_id = 12   # identifiant namespace
 
 ### ETAPE 1 
 #   
-ns_label = site.namespace(ns_id) # Label local du namespace
-prop = ns_prop(ns_id)            # Scan l'espace de noms 
-prop.append(ns_label)            # ajoute le label local de l'espace à la liste des propriétés
-prop.append(lang) 
-[total, redirection, racine, sous_page, verif, dict_page, ns_id, ns_label, lang] = prop # On a besoin uniquement de dict_page
-prop_code = write_t_prop(ns_id, prop)   # la table des propriétés de l'espace de noms
-table_code =  write_t_pages(dict_page)  # la table des pages
+nsdata = ns_collect_data(ns_id)           # Scan l'espace de noms VERSION 2
+dict_page = nsdata['dict_page']
+
+table_prop_code = wlms_table_prop(ns_id, nsdata) # la table des propriétés de l'espace de noms
+table_pages_code =  wlms_table_pages(dict_page) ###TEST wlms_table_pages(nsdata)       # la table des pages
 # Concatener le code Lua ici
-lua_code = prop_code + table_code       
-module_name = u'ns_' + ns_label         # enregistre le module du namespace
-# print lua_code                        # TEST
-write_module(module_name, lua_code)     # Ecriture du module #TEST 
+lua_code = table_prop_code + table_pages_code  # Concatener le code Lua
+
+module_name = u'ns_' + nsdata['label']  # enregistre le module du namespace
+#print lua_code                         # TEST affiche le code du module
+write_module_lua(module_name, lua_code) # Ecriture du module #TEST 
+

@@ -1,18 +1,19 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8  -*-
 
-# Licence CeCILL compatible Gnu-Gpl (License.txt)
+import pywikibot ###, re, sys
+from namespace_lib import *
+from lua_mw_lib import *
 
-### Liste les pages de l'espace de nom "Département" nº 108 
-#   Verifie si redirection et cherche la cible
-#   Liste les sous-pages. les liens dans leçons par thèmes et leçons par niveaux
-#   Compare les deux listes de liens et les fusionnent
-#   Verifie si les pages derrière les liens existent
-### Compare le nombre de page d'interface et le nombre de leçons du département
+### Outil d'analyse et report de données sur l'espace de noms numero 108 - Département - Départementt
+### Licence CeCiLL voir Licence.txt
+lang = 'fr'       
+family = 'wikiversity'
+site = pywikibot.Site(lang, family)  
+ns_id = 108  # NAMESPACE ID
 
-import pywikibot
-from namespaceLib import *
-
+### CHK SUB FOR LNK --- AMELIORER
+#   Cherche les liens dans les sous-pages
 def check_lessons_in_sp(page, string):
   sp = str(page)
   sp = sp[2:-2] + string
@@ -25,25 +26,15 @@ def check_lessons_in_sp(page, string):
     gen = []
   return gen
 
-lang = 'fr'       
-family = 'wikiversity'
-site = pywikibot.Site(lang, family)  
-
-ns_id = 108  # NAMESPACE ID
-ns_label = site.namespace(ns_id) # Label local du namespace
-
 ### ETAPE 1 
-#   
-prop = ns_prop(ns_id)
-prop.append(ns_label)            # ajoute le label local de l'espace à la liste des propriétés
-prop.append(lang)                # ajoute le code langue pour former le préfixe des filtres
-[total, redirection, racine, sous_page, verif, dict_page, ns_id, ns_label, lang] = prop
+nsdata = ns_collect_data(ns_id)           # Scan l'espace de noms VERSION 2
+dict_page = nsdata['dict_page']
 
-merged = merge_sub(dict_page)
+merged = merge_sub2(dict_page)
 [dict_racine, dict_sub] = merged
-dict_root_sub = root_sub(merged)
+dict_root_sub = root_sub2(merged)
 
-for p in dict_root_sub:
+for p in dict_root_sub: # A VERIFIER bcp de code
   d_lesson = {}
   page_prop = dict_root_sub[p]
   [niveau, date1, cible, lsp] = page_prop
@@ -75,28 +66,14 @@ for p in dict_root_sub:
   d_lesson['l_exist'] = lesson_exist
   #if len(lesson_exist) == 0: # Liste des départements vides pour dates à collecter
   #  dpt_vide =               # Copier dans un dict pour ajout des dates
-  page_prop.append(d_lesson)    # Ajout du dictionnaire des leçons
-  dict_root_sub[p] = page_prop  # Actualise les propriétes de la page
+  page_prop['d_lesson'] = d_lesson   # Ajout du dictionnaire des leçons
+  dict_root_sub[p] = page_prop       # Actualise les propriétes de la page
 
-# Affecte des valeurs nulles aux sous-pages
-for page in dict_sub:        # les propriétes des sous-pages doivent correspondre à celles des departements 
-  page_prop = dict_sub[page] # Les valeurs de sub_dict sont mises à jour dans dict_page
-  page_prop.append(lsp)
-  l_theme, l_niveau, l_add, all_lessons, l_exist = [], [], [], [], [] # on place des liste vides
-  d_lesson['l_theme'] = l_theme #
-  d_lesson['l_niveau'] = l_niveau
-  d_lesson['l_add'] = f_niveau
-  d_lesson['all_lessons'] = all_lessons
-  d_lesson['l_exist'] = lesson_exist
-  page_prop.append(d_lesson)
-  dict_sub[page] = page_prop # met à jour les propriétés dans sub_dict (lié à dict_page)
+table_prop_code = wlms_table_prop(ns_id, nsdata) # la table des propriétés de l'espace de noms ¿ns_id?
+table_pages_code = wlms_table_pages(dict_page)   ###TEST wlms_table_pages(nsdata)       # la table des pages
+# Concatener le code Lua ici
+lua_code = table_prop_code + table_pages_code    # Concatener le code Lua
 
-lua_code = write_t_prop(ns_id, prop)   # la table des propriétés de l'espace de noms
-table_code =  write_dpt(dict_page)     # la table des pages
-# Concatener le code Lua ici           # ATTENTION Ajouter les dates et utilisateur pour départe
-lua_code = lua_code + table_code       
-module_name = u'ns_' + ns_label        # Nom du module contment videenant le code des tables Lua
-# print lua_code
-write_module(module_name, lua_code)    ### Ecriture du module
-
-
+module_name = u'ns_' + nsdata['label']  # enregistre le module du namespace
+print lua_code                         # TEST affiche le code du module
+write_module_lua(module_name, lua_code) # Ecriture du module #TEST 
