@@ -91,5 +91,5 @@ table_dpt_code = wlms_table(dpt_fac,'dpt_fac') # write_tableau - ecrit la table 
 # Concatener le code Lua ici
 lua_code = table_prop_code + table_pages_code + table_dpt_code   # Concatener le code Lua
 module_name = u'ns_' + nsdata['label']  # enregistre le module du namespace
-print lua_code                          # TEST affiche le code du module
+#print lua_code                          # TEST affiche le code du module
 write_module_lua(module_name, lua_code) # Ecriture du module #TEST 
