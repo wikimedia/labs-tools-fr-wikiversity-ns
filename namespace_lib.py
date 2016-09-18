@@ -9,19 +9,6 @@ lang = 'fr'
 family = 'wikiversity'
 site = pywikibot.Site(lang, family) 
 
-### A DEPLACER/MODIFIER vers lua_mw_lib
-#   passer le nom de la table en argument
-#   verifier le type liste
-def write_tableau(dpt_fac): # POUR NS FACULTES inverted dict
-  t = 'p.t_fac_dpt = {\n'
-  for page in dpt_fac:
-    [cible, l_fac] = dpt_fac[page]
-    l_code = list_to_lua(l_fac)  
-    t = t + '{page = ' + str(page) + ', nb_fac = ' + str(len(l_fac)) + ', cible = ' + str(cible)  + ', l_fac = ' + str(l_code) +'},\n'
-  t = t + '}\n'
-  t = unicode(t, 'utf_8')
-  return t
-
 ### NOUVELLE FONCTION Collecte les dates de 1ere revision
 #   place le timestamp dans la clé 'date1'
 def ns_get_date(dict_page, prefix_list, label):
@@ -50,7 +37,7 @@ def ns_collect_data(ns_id):
   for page in allpages:       # Traitement de chaque page du generateur
     cible = '\'non\''             # Initialise valeur pour cible de redirection
     nb_sep = 0                    # Initialise le nombre de separateur pour la page
-    page_prop = {}                # Initialise le LISTE des pages TRANFORMER EN TUPLE
+    #page_prop = {}                
     total=total+1                 # Compteur de page
     redir = page.isRedirectPage()    # Test si la page est une redirection
     if redir == True:                # OUI
@@ -63,7 +50,7 @@ def ns_collect_data(ns_id):
     else:                      # Separateur
       sous_page = sous_page +1 # Compteur de sous-pages
     date = '' #TEST MAUVAISE SOLUTION
-    page_prop = {}  # TRANFORMER EN DICTIONARY
+    page_prop = {}  # # Initialise DICTIONNAIRE propriétés de pages
     page_prop['nsep'] = nb_sep
     page_prop['date1'] = date
     page_prop['cible'] = cible
@@ -293,3 +280,16 @@ def get_target(page):
     #code = code + str(i) + ', '
   #code = code + '}, \n'
   #return code
+
+#### A DEPLACER/MODIFIER vers lua_mw_lib
+##   passer le nom de la table en argument
+##   verifier le type liste
+#def write_tableau(dpt_fac): # POUR NS FACULTES inverted dict
+  #t = 'p.t_fac_dpt = {\n'
+  #for page in dpt_fac:
+    #[cible, l_fac] = dpt_fac[page]
+    #l_code = list_to_lua(l_fac)  
+    #t = t + '{page = ' + str(page) + ', nb_fac = ' + str(len(l_fac)) + ', cible = ' + str(cible)  + ', l_fac = ' + str(l_code) +'},\n'
+  #t = t + '}\n'
+  #t = unicode(t, 'utf_8')
+  #return t
