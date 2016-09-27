@@ -31,8 +31,8 @@ def write_module_lua(module_name, lua_code): # Compiler tout le code du module a
 def wlms_table(python_dict, table_name):    # La fonction reçoit un dictionnaire python 
   t = 'p.t_' + table_name + ' = {\n' # et le nom de la table Lua à créer ; compilé ici
   for data in python_dict:
-    t = t + '{page = ' + str(data) + ', ' # compile clé et valeur
-    page_prop = python_dict[data]         # le dictionnaire des proriétés de la page
+    t = t + '{page = ' + str(data) + ', ' # VAR_TITLE ATTENTION définit variable,compile le nom de la page
+    page_prop = python_dict[data]         # déclare le dictionnaire des proriétés de la page
     t = t + wmls_table_input(page_prop)   # compile le code Lua du dict. des propriétés de page
   t = t + wmls_table_close                # fin de table
   t = unicode(t, 'utf_8')
@@ -44,8 +44,9 @@ def wlms_table(python_dict, table_name):    # La fonction reçoit un dictionnair
 def wmls_table_input(page_prop):
   t = ''
   for prop in page_prop:
-    if page_prop[prop] == '':              # si la valeur est nulle
-	t = t + str(prop) + ' = \'\', '    # formate le code lua
+    if page_prop[prop] == '':  # si la valeur est vide
+      pass                     # Ne code pas le paramètre 
+	#t = t + str(prop) + ' = \'\', '    # formate le code lua
     if type(page_prop[prop]) == list:
       t = t + str(prop) + ' = ' + wmls_list_to_lua(page_prop[prop])
     elif prop == 'date1': # AMELIORER type int on reconnait la date par le nom du param.
@@ -74,7 +75,7 @@ def wlms_table_prop(ns_id, nsdata): #
   return t1  
 
 ###DOUBLE EMPLOI avec wlms_table(python_dict, table_name)
-#
+#  REMPLACER PAR wlms_table(dict_page, 'pages') -> hlp, cat
 def wlms_table_pages(dict_page): 
   t = 'p.t_pages = {\n'  # placer la chaine dans une variable
   for page in dict_page: # pour chaque page

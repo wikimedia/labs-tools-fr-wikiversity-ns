@@ -9,7 +9,15 @@ lang = 'fr'
 family = 'wikiversity'
 site = pywikibot.Site(lang, family) 
 
-### NOUVELLE FONCTION Collecte les dates de 1ere revision
+### gen_to_list(gen, list)
+#   reçoit un générateur PWB retourne une liste Python
+def gen_to_list(gen_name):
+  list_name = []
+  for g in gen_name:
+    list_name.append(g)
+  return list_name
+
+### Collecte les dates de 1ere revision
 #   place le timestamp dans la clé 'date1'
 def ns_get_date(dict_page, prefix_list, label):
   for page in dict_page:
@@ -30,7 +38,7 @@ def ns_get_date(dict_page, prefix_list, label):
 #   utilise un dictionnaire pour page_prop
 def ns_collect_data(ns_id):
   ns_label = site.namespace(ns_id) # Label local du namespace
-  allpages = site.allpages(namespace=ns_id) #, limit=25)  #TEST # générateur de toutes les pages de l'espace
+  allpages = site.allpages(namespace=ns_id)#, limit=30)  #TEST # générateur de toutes les pages de l'espace
   total, redirection, racine, sous_page= 0, 0, 0, 0 # initialise les prop de l'espace
   resep = re.compile('/')     # Regex pour le separateur de sous-pages
   dict_page = {}              # Initialise le dictionnaire principal des pages
@@ -73,10 +81,11 @@ def prefix(p, lang, label):
   prefixed = lang + ':' + label + ':' + p
   return prefixed
 
-### NOUVELLE FONCTION
-def merge_sub2 (mydict):
-  dict_racine = {}    # Dictionnaire des pages racines
-  dict_sub = {}       # Dictionnaire des sous-pages
+### Scinde les pages racine et sous pages
+#   lit le dictionnaire des pages analyse le nombre de separateurs
+def merge_sub2 (mydict): # RENOMMER
+  dict_racine = {}       # Dictionnaire des pages racines
+  dict_sub = {}          # Dictionnaire des sous-pages
   for page in mydict:
     page_prop = mydict[page]
     nsep = page_prop['nsep']
@@ -87,12 +96,14 @@ def merge_sub2 (mydict):
   merged = [dict_racine, dict_sub]  # LISTE reçoit les deux dictionnaires précedents
   return merged
 
-def root_sub2(merged):
-  [dict_racine, dict_sub] = merged
-  dict_root_sub = {}
+### Traite les pages racines
+#   Ajoute la liste des sous-pages aux propriétés des pages racines
+def root_sub2(merged):             # Reçoit la liste merged
+  [dict_racine, dict_sub] = merged # Extrait les dictionnaires 
+  dict_root_sub = {}               # Initialise root/sub dict
   for racine in dict_racine:       # Pour chaque page du dictionnaire racine
-    page_prop = dict_racine[racine]
-    list_sub = []                  # liste des sous-pages pour chaque racine
+    page_prop = dict_racine[racine]# Extrait les propriétés
+    list_sub = []                  # initialise liste des sous-pages pour chaque racine
     str_racine = str(racine)       # converti en string
     prefix = str_racine[:-2]       # retire les crochets ]] avant comparaison
     for sub in dict_sub:           # pour chaque sous-page
@@ -101,7 +112,7 @@ def root_sub2(merged):
         list_sub.append(sub)       # ajoute la page à la liste
     page_prop['lsp'] = list_sub    # ajoute la liste des sous-pages aux propriétés
     dict_root_sub[racine] = page_prop  # ajoutes les propriétés à la page racine
-  return dict_root_sub
+  return dict_root_sub             # Retourne le dictionnaire root/sub
 
 def get_linked_p(source_p, ns):              # collecte les pages liées vers ns sur la page source
   gen = source_p.linkedPages(namespaces=ns)  # génère la liste des dpt à patir de la page fac

@@ -1,12 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8  -*-
-
-import pywikibot ###, re, sys
-from namespace_lib import *
-from lua_mw_lib import *
-
 ### Outil d'analyse et report de données sur l'espace de noms numero 104 Recherche
 ### Licence CeCiLL voir Licence.txt
+from namespace_lib import *
+from lua_mw_lib import *
+import pywikibot 
 
 lang = 'fr'       
 family = 'wikiversity'
@@ -17,8 +15,10 @@ ns_id = 104
 nsdata = ns_collect_data(ns_id)           # Scan l'espace de noms VERSION 2
 dict_page = nsdata['dict_page']
 
-## Departements de recherche fonction spécifique ns
-#  construit et ajoute la liste des doc de recherche au dictionnaire des pages
+
+### Ajoute la liste des doc de recherche au dictionnaire des pages
+#   Filtre les departements de recherche
+#   Collecte les liens vers ns_104 retourne la liste l_doc
 for page in dict_page: # Analyse des départements de recherche
   page_prop = dict_page[page]
   l_doc = []           # Liste des documents de recherche liés à un dpt
