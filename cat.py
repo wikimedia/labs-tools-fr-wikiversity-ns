@@ -58,11 +58,17 @@ for article in articles:  # pour chaque article contenu dans la catégorie
   # ajouter le nombre aux propriétés de la page "all_in_cat" = c
   for page in dict_page:
     page_prop = dict_page[page]
+    
     page = unicode(page)
+    page = page[2:-2]           # LES CROCHETS
     #print type(title)
     #print type(page)
+    #print title
+    #print page
     if page == title:
+      #print 'yyyyyyyyeeeeeeeeeesssssssssssssss'
       page_prop['all_in_cat'] = c
+      #print page_prop['all_in_cat']
 ### FIN collecte data
 
 table_prop_code = wlms_table_prop(ns_id, nsdata) # la table des propriétés de l'espace de noms
