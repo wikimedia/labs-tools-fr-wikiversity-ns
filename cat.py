@@ -23,7 +23,7 @@ for cat in cat_mon:
   title = unicode(cat, 'utf-8')
   page = pywikibot.page.Category(site, title)  # PWB crée un objet page_de_catégorie
   page_prop=dict_page[page]
-  empty = page.isEmptyCategory()
+  #empty = page.isEmptyCategory()
   hidden = page.isHiddenCategory()
   subcat = page.subcategories()
   subcat = gen_to_list(subcat)
