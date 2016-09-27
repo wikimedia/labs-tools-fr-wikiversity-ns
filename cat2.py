@@ -12,6 +12,11 @@ family = 'wikiversity'
 site = pywikibot.Site(lang, family)  
 ns_id = 14   
 
+### Analyse le contenu de la catégorie donnée en title
+#   Pour chaque page/article dans la catégorie
+#   compile le titre de la catégorie homonyme
+#   Calcul le nombre de pages total dans chaque catégorie de maière récursive
+#
 title = u'fr:Catégorie:Départements'
 page = pywikibot.page.Category(site, title)
 #articles = page.articles(recurse=True) # liste tous les articles dasn cat et subcat
@@ -28,8 +33,14 @@ for article in articles:
   for g in gen:
     c=c+1
   print c
-    
+  # ajouter le nombre aux propriétés de la page "all_in_cat" = int
   
+#for page in dict_page:
+  #page_prop = dict_page[page]
+  #page = str(page)
+  #if page == '[[fr:Aide:Catégorie]]':
+    #test = 1000000000000
+    #page_prop['test'] =test
 
   #title = article
   #page = pywikibot.page(site, title)

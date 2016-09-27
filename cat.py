@@ -22,7 +22,7 @@ cat_mon = ['fr:Catégorie:Facultés', 'fr:Catégorie:Départements', 'fr:Catégo
 for cat in cat_mon:
   title = unicode(cat, 'utf-8')
   page = pywikibot.page.Category(site, title)  # PWB crée un objet page_de_catégorie
-  page_prop=dict_page[page]
+  page_prop = dict_page[page]
   #empty = page.isEmptyCategory()
   hidden = page.isHiddenCategory()
   subcat = page.subcategories()
@@ -31,10 +31,39 @@ for cat in cat_mon:
   articles = page.articles()
   articles = gen_to_list(articles)
   page_prop['articles'] = articles
-  members = page.members()
-  members = gen_to_list(members)
-  page_prop['members'] = members
+  #members = page.members()
+  #members = gen_to_list(members)
+  #page_prop['members'] = members
   #print dict_page[page]
+  
+### Analyse le contenu de la catégorie donnée en title
+#   Pour chaque page/article dans la catégorie
+#   compile le titre de la catégorie homonyme
+#   Calcul le nombre de pages total dans chaque catégorie de maière récursive
+#
+title = u'fr:Catégorie:Départements'        # titre complet de la catégorie
+page = pywikibot.page.Category(site, title) # objet page PWB
+articles = page.articles()                  # génère la liste des articles
+prefix = u'fr:Catégorie:' # determine le prefix de la catégorie homonyme
+for article in articles:  # pour chaque article contenu dans la catégorie         
+  #print article
+  suffix = article.title(withNamespace=False) # Tronque le titre court de l'article
+  title = prefix + suffix                     # Compile le titre complet de la ctegorie eponyme
+  page = pywikibot.page.Category(site, title) # crée un objet page pour la catégorie éponyme
+  gen = page.articles(recurse=True)           # liste recursive de tous les articles cat et subcat
+  c = 0         # Initialise le compteur de pages
+  for g in gen: # pour chaque article du générateur
+    c = c +  1  # ajoute au total d'article
+  #print c       ### TEST progression script
+  # ajouter le nombre aux propriétés de la page "all_in_cat" = c
+  for page in dict_page:
+    page_prop = dict_page[page]
+    page = unicode(page)
+    #print type(title)
+    #print type(page)
+    if page == title:
+      page_prop['all_in_cat'] = c
+### FIN collecte data
 
 table_prop_code = wlms_table_prop(ns_id, nsdata) # la table des propriétés de l'espace de noms
 table_pages_code = wlms_table(dict_page, 'pages')   # la table des pages

@@ -14,6 +14,7 @@ ns_id = 12   # identifiant namespace
 ### Collect data 
 nsdata = ns_collect_data(ns_id)           # Scan l'espace de noms VERSION 2
 dict_page = nsdata['dict_page']
+
 ### Write Lua tables
 table_prop_code = wlms_table_prop(ns_id, nsdata)   # la table des propriétés de l'espace de noms
 table_pages_code =  wlms_table(dict_page, 'pages') # la table des pages ATTENTION definit variable
@@ -21,6 +22,6 @@ table_pages_code =  wlms_table(dict_page, 'pages') # la table des pages ATTENTIO
 lua_code = table_prop_code + table_pages_code      # Concatener le code Lua
 ### Save Module
 module_name = u'ns_' + nsdata['label']  # enregistre le module du namespace
-#print lua_code                         # TEST affiche le code du module
-write_module_lua(module_name, lua_code) # Ecriture du module #TEST 
+print lua_code                         # TEST affiche le code du module
+#write_module_lua(module_name, lua_code) # Ecriture du module #TEST 
 
