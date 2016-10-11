@@ -14,16 +14,14 @@ ns_id = 14
 nsdata = ns_collect_data(ns_id) # Scan l'espace de noms collecte les données
 dict_page = nsdata['dict_page'] # reconnait le dictionnaire des pages
 
-### Collecte des propriétés des catégories
-#   empty, hidden, subcat, articles, pas members(optional - test- doublon)
-#count = 0 # TEST visualise la progression du script
+### Liste des catégories `a superviser
 cat_mon = ['fr:Catégorie:Facultés', 'fr:Catégorie:Départements', 'fr:Catégorie:Départements de recherche', 'fr:Catégorie:Recherches par facultés']
 
 for cat in cat_mon:
   title = unicode(cat, 'utf-8')
   page = pywikibot.page.Category(site, title)  # PWB crée un objet page_de_catégorie
   page_prop = dict_page[page]
-  #empty = page.isEmptyCategory()
+  #empty = page.isEmptyCategory()  # Echoue lors de execution depuis serveur
   hidden = page.isHiddenCategory()
   subcat = page.subcategories()
   subcat = gen_to_list(subcat)
@@ -31,7 +29,7 @@ for cat in cat_mon:
   articles = page.articles()
   articles = gen_to_list(articles)
   page_prop['articles'] = articles
-  #members = page.members()
+  #members = page.members()     
   #members = gen_to_list(members)
   #page_prop['members'] = members
   #print dict_page[page]
@@ -39,7 +37,7 @@ for cat in cat_mon:
 ### Analyse le contenu de la catégorie donnée en title
 #   Pour chaque page/article dans la catégorie
 #   compile le titre de la catégorie homonyme
-#   Calcul le nombre de pages total dans chaque catégorie de maière récursive
+#   Calcul le nombre de pages total dans chaque catégorie de manière récursive
 #
 title = u'fr:Catégorie:Départements'        # titre complet de la catégorie
 page = pywikibot.page.Category(site, title) # objet page PWB
@@ -54,27 +52,29 @@ for article in articles:  # pour chaque article contenu dans la catégorie
   c = 0         # Initialise le compteur de pages
   for g in gen: # pour chaque article du générateur
     c = c +  1  # ajoute au total d'article
-  #print c       ### TEST progression script
-  # ajouter le nombre aux propriétés de la page "all_in_cat" = c
-  for page in dict_page:
-    page_prop = dict_page[page]
-    
-    page = unicode(page)
-    page = page[2:-2]           # LES CROCHETS
-    #print type(title)
-    #print type(page)
-    #print title
-    #print page
-    if page == title:
-      #print 'yyyyyyyyeeeeeeeeeesssssssssssssss'
-      page_prop['all_in_cat'] = c
+  #print c      # TEST progression script
+  for page in dict_page:         # ajouter le nombre aux propriétés de la page
+    page_prop = dict_page[page]  #
+    page = unicode(page)         #
+    page = page[2:-2]            # LES CROCHETS
+    if page == title:              #  
+      page_prop['all_in_cat'] = c  # Enregistre le nombre dans la propriété all_in_cat de la page
       #print page_prop['all_in_cat']
+
+### Collecte tous les articles de la catégorie Recherches par facultés
+#   enregistre une liste simple sous forme de table lua "t_rdoc_in_cat"
+title = u'fr:Catégorie:Recherches par facultés' # Recherches par facultés
+page = pywikibot.page.Category(site, title) # objet Catégorie PWB
+gen_articles = page.articles(recurse=True)  # Liste récursives des atricles
+gen_articles = gen_to_list(gen_articles)    # transforme en liste python
+table_rdoc_in_cat = wmls_list_to_lua2(gen1) # SANS LA VIRGULE FINALE transforme en code lua
+table_rdoc_in_cat = unicode(table_rdoc_in_cat, 'utf-8') 
 ### FIN collecte data
 
 table_prop_code = wlms_table_prop(ns_id, nsdata) # la table des propriétés de l'espace de noms
 table_pages_code = wlms_table(dict_page, 'pages')   # la table des pages
 # Concatener le code Lua ici
-lua_code = table_prop_code + table_pages_code  # Concatener le code Lua
+lua_code = table_prop_code + table_pages_code + 'p.t_rdoc_in_cat = ' + table_rdoc_in_cat # Concatener le code Lua
 
 module_name = u'ns_' + nsdata['label']  # enregistre le module du namespace
 #print lua_code                         # TEST affiche le code du module
@@ -113,47 +113,3 @@ write_module_lua(module_name, lua_code) # Ecriture du module #TEST
 # sauvegarde "toobigdata"
 # 
 
-#############METHODES
-#for page in dict_page:
-  #count = count +1 
-  #print count
-  ##if page == 
-  #page_prop = dict_page[page]
-  ##page = pywikibot(site, page)
-  #empty = page.isEmptyCategory()
-  #hidden = page.isHiddenCategory()
-  
-  ##for i in cat_mon:
-  ##subcat = page.subcategories()
-  ##subcat = gen_to_list(subcat)
-  ##page_prop['subcat'] = subcat
-  ##articles = page.articles()
-  ##articles = gen_to_list(articles)
-  ##page_prop['articles'] = articles
-  ##members = page.members()
-  ##members = gen_to_list(members)
-  ##page_prop['members'] = members
-  #print page
-  #print type(page)
-  #upage = unicode(page)
-  #if upage == u'[[fr:Catégorie:Accord]]':
-    #print 'yyyyyyyyyyeeeeeeeeeesssssss'
-  
-  ##print '###'
-  ##print '# MEMBERS #'
-  ##gen_to_list
-  ##for member in members:
-    ##print member
-  ##print '# SUBCAT #'
-  ##for cat in subcat:
-    ##print cat
-  #if empty:
-    #page_prop['empty'] = empty
-
-    ##print 'VIDE'
-    ##print page
-  #if hidden:
-    #page_prop['hidden'] = hidden
-    ##print 'CACHÉ'
-    ##print page
-  ##print '###########'

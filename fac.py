@@ -30,26 +30,28 @@ def chk_lnk_dpt(dict_page) :
 
 ### Inverse le dictionnaire des facultés en dictionnaire de departements
 #   Retourne la première liste de départements
+#   ATTENTION la collecte des redirection est desactivée
+#   probablement inutile ici...
 def tupleinvert():
   dpt_fac = {}
-  for page in dict_page:        # Pour Chaque faculté
+  for page in dict_page:       # Pour Chaque faculté
     page_prop = dict_page[page] # une liste de parametres
-    if page_prop['nsep'] == 0:
+    if page_prop['nsep'] == 0:  # Filtre des pages racines
       for departement in page_prop['ldpt' ]: # pour chaque departement dans cette faculté
-	dpt_params = {}                      # On utilise désormais un DICTIONNAIRE
-	redir = departement.isRedirectPage()
-	target_departement = ''
-	if redir == True:
-	  target_departement = departement.getRedirectTarget()
+	dpt_params = {}                      # initialise DICTIONNAIRE des prop du dept
+	#redir = departement.isRedirectPage() # test redir
+	#target_departement = ''
+	#if redir == True:
+	#  target_departement = departement.getRedirectTarget()
+	#dpt_params['cible'] = target_departement
 	if not departement in dpt_fac:   # Si le departement n'est pas dans le tuple inverse
           l_fac = []                     # Initialise Liste des faculté pour ce departement
-          l_fac.append(page)             # Ajoute la faculté dans la liste
-          dpt_params['cible'] = page_prop['cible']
-          dpt_params['l_fac'] = l_fac
+          l_fac.append(page)             # Ajoute la faculté dans la liste  
+          dpt_params['l_fac'] = l_fac    # copie la liste des facultés dans le nouveau dictionnaire
           dpt_fac[departement] = dpt_params # enregistre clé valeur dans le tuple inverse
         else:                               # Le departement est deja dans le tuple inverse
           dpt_params = dpt_fac[departement] # Recupere la liste  
-          l_fac.append(page)                # Ajoute la faculté dans la liste
+          dpt_params['l_fac'].append(page)  # Ajoute la faculté dans la liste CONTENUE dans le dictionnaire
   return dpt_fac
 
 ### Collect data

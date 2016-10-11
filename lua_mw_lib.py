@@ -94,6 +94,13 @@ def wmls_list_to_lua(l): # convertit une liste python en table Lua
     code = code + str(i) + ', '   # ipairs liste items sans clé
   code = code + '}, \n'           # ferme la table + saut de ligne
   return code                     # retourne le code Lua
+# Version 2 sans la virgule finale (voir cat.py)
+def wmls_list_to_lua2(l): # convertit une liste python en table Lua
+  code = '{'                      # ouvre la table
+  for i in l:  
+    code = code + str(i) + ', '   # ipairs liste items sans clé
+  code = code + '} \n'           # ferme la table + saut de ligne (SANS VIRGULE FINALE)
+  return code                     # retourne le code Lua
 
 
 #def wmls_table_input_old(pp):
