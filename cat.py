@@ -15,30 +15,23 @@ nsdata = ns_collect_data(ns_id) # Scan l'espace de noms collecte les données
 dict_page = nsdata['dict_page'] # reconnait le dictionnaire des pages
 
 ### Liste des catégories `a superviser
+#   Ajoute la liste des sous-catégories et des artcicles
 cat_mon = ['fr:Catégorie:Facultés', 'fr:Catégorie:Départements', 'fr:Catégorie:Départements de recherche', 'fr:Catégorie:Recherches par facultés']
-
 for cat in cat_mon:
   title = unicode(cat, 'utf-8')
   page = pywikibot.page.Category(site, title)  # PWB crée un objet page_de_catégorie
   page_prop = dict_page[page]
-  #empty = page.isEmptyCategory()  # Echoue lors de execution depuis serveur
-  #hidden = page.isHiddenCategory()
   subcat = page.subcategories()
   subcat = gen_to_list(subcat)
   page_prop['subcat'] = subcat
   articles = page.articles()
   articles = gen_to_list(articles)
   page_prop['articles'] = articles
-  #members = page.members()     
-  #members = gen_to_list(members)
-  #page_prop['members'] = members
-  #print dict_page[page]
   
 ### Analyse le contenu de la catégorie donnée en title
 #   Pour chaque page/article dans la catégorie
 #   compile le titre de la catégorie homonyme
 #   Calcul le nombre de pages total dans chaque catégorie de manière récursive
-#
 title = u'fr:Catégorie:Départements'        # titre complet de la catégorie
 page = pywikibot.page.Category(site, title) # objet page PWB
 articles = page.articles()                  # génère la liste des articles
@@ -64,15 +57,15 @@ for article in articles:  # pour chaque article contenu dans la catégorie
 ### Collecte tous les articles de la catégorie Recherches par facultés
 #   enregistre une liste simple sous forme de table lua "t_rdoc_in_cat"
 title = u'fr:Catégorie:Recherches par facultés' # Recherches par facultés
-page = pywikibot.page.Category(site, title) # objet Catégorie PWB
-gen_articles = page.articles(recurse=True)  # Liste récursives des atricles
-gen_articles = gen_to_list(gen_articles)    # transforme en liste python
-table_rdoc_in_cat = wmls_list_to_lua2(gen1) # SANS LA VIRGULE FINALE transforme en code lua
+page = pywikibot.page.Category(site, title)     # objet Catégorie PWB
+gen_articles = page.articles(recurse=True)      # Liste récursives des atricles
+gen_articles = gen_to_list(gen_articles)        # transforme en liste python
+table_rdoc_in_cat = wmls_list_to_lua2(gen_articles)     # SANS LA VIRGULE FINALE transforme en code lua
 table_rdoc_in_cat = unicode(table_rdoc_in_cat, 'utf-8') 
 ### FIN collecte data
 
-table_prop_code = wlms_table_prop(ns_id, nsdata) # la table des propriétés de l'espace de noms
-table_pages_code = wlms_table(dict_page, 'pages')   # la table des pages
+table_prop_code = wlms_table_prop(ns_id, nsdata)  # la table des propriétés de l'espace de noms
+table_pages_code = wlms_table(dict_page, 'pages') # la table des pages
 # Concatener le code Lua ici
 lua_code = table_prop_code + table_pages_code + 'p.t_rdoc_in_cat = ' + table_rdoc_in_cat # Concatener le code Lua
 
