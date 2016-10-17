@@ -22,6 +22,7 @@ cat_mon = ['fr:Catégorie:Facultés',
 	   'fr:Catégorie:Recherches par facultés',
 	   'fr:Catégorie:Laboratoire de recherche',
 	   'fr:Catégorie:Fiches de lecture',
+	   'fr:Catégorie:Projet collaboratif',
 	   'fr:Catégorie:Projets collaboratifs']
 for cat in cat_mon:
   title = unicode(cat, 'utf-8')
@@ -29,7 +30,7 @@ for cat in cat_mon:
   page_prop = dict_page[page]
   subcat = page.subcategories()
   subcat = gen_to_list(subcat)
-  page_prop['subcat'] = subcat
+  page_prop['subcat'] = subcat # ATTENTION var name articles, subcat(s)
   articles = page.articles()
   articles = gen_to_list(articles)
   page_prop['articles'] = articles
