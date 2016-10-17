@@ -90,7 +90,7 @@ table_prop_code = wlms_table_prop(ns_id, nsdata)  # la table des propriétés de
 table_pages_code = wlms_table(dict_page, 'pages') # la table des pages
 # Concatener le code Lua ici
 lua_code = table_prop_code + table_pages_code + 'p.t_rdoc_in_cat = ' + table_rdoc_in_cat # Concatener le code Lua
-lua_code = lua_code + 't_projets_collaboratifs' + t_projets_collaboratifs
+lua_code = lua_code + 't_projets_collaboratifs = ' + t_projets_collaboratifs
 module_name = u'ns_' + nsdata['label']  # enregistre le module du namespace
 #print lua_code                         # TEST affiche le code du module
 write_module_lua(module_name, lua_code) # Ecriture du module #TEST 
