@@ -11,7 +11,6 @@ site = pywikibot.Site(lang, family)
 
 ### gen_to_list(gen, list) VERIFIER
 #   reçoit un générateur PWB retourne une liste Python
-
 def gen_to_list(gen_name):
   list_name = []
   for g in gen_name:

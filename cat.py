@@ -61,7 +61,7 @@ for article in articles:  # pour chaque article contenu dans la catégorie
       page_prop['all_in_cat'] = c  # Enregistre le nombre dans la propriété all_in_cat de la page
       #print page_prop['all_in_cat']
 
-### Collecte tous les articles de la catégorie Recherches par facultés
+### Collecte recursivement tous les articles de la catégorie Recherches par facultés
 #   enregistre une liste simple sous forme de table lua "t_rdoc_in_cat"
 title = u'fr:Catégorie:Recherches par facultés' # Recherches par facultés
 page = pywikibot.page.Category(site, title)     # objet Catégorie PWB
@@ -69,13 +69,28 @@ gen_articles = page.articles(recurse=True)      # Liste récursives des atricles
 gen_articles = gen_to_list(gen_articles)        # transforme en liste python
 table_rdoc_in_cat = wmls_list_to_lua2(gen_articles)  # SANS LA VIRGULE FINALE transforme en code lua
 table_rdoc_in_cat = unicode(table_rdoc_in_cat, 'utf-8') 
+### fonction all_articles(category)
+#   retourne une table au format lua contenant la liste recursive des articles 
+#   contenu dans la catégorie et ses sous-cat. 
+#   Ensuite, il faut Ajouter la table au module ns categorie
+def all_articles(category) :
+  title = category
+  page = pywikibot.page.Category(site, title)     # objet Catégorie PWB
+  gen_articles = page.articles(recurse=True)      # Liste récursives des articles
+  gen_articles = gen_to_list(gen_articles)        # transforme en liste python
+  table_all_in_cat = wmls_list_to_lua2(gen_articles)    # SANS LA VIRGULE FINALE transforme en code lua
+  table_all_in_cat = unicode(table_all_in_cat, 'utf-8') # réponse au format unicode
+  return table_all_in_cat
+
+t_projets_collaboratifs = all_articles(u'fr:Catégorie:Projets collaboratifs')
+
 ### FIN collecte data
 
 table_prop_code = wlms_table_prop(ns_id, nsdata)  # la table des propriétés de l'espace de noms
 table_pages_code = wlms_table(dict_page, 'pages') # la table des pages
 # Concatener le code Lua ici
 lua_code = table_prop_code + table_pages_code + 'p.t_rdoc_in_cat = ' + table_rdoc_in_cat # Concatener le code Lua
-
+lua_code = lua_code + 't_projets_collaboratifs' + t_projets_collaboratifs
 module_name = u'ns_' + nsdata['label']  # enregistre le module du namespace
 #print lua_code                         # TEST affiche le code du module
 write_module_lua(module_name, lua_code) # Ecriture du module #TEST 
