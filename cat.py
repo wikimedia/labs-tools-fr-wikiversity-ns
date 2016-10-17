@@ -16,7 +16,13 @@ dict_page = nsdata['dict_page'] # reconnait le dictionnaire des pages
 
 ### Liste des catégories `a superviser
 #   Ajoute la liste des sous-catégories et des artcicles
-cat_mon = ['fr:Catégorie:Facultés', 'fr:Catégorie:Départements', 'fr:Catégorie:Départements de recherche', 'fr:Catégorie:Recherches par facultés']
+cat_mon = ['fr:Catégorie:Facultés',
+	   'fr:Catégorie:Départements',
+	   'fr:Catégorie:Départements de recherche',
+	   'fr:Catégorie:Recherches par facultés',
+	   'fr:Catégorie:Laboratoire de recherche',
+	   'fr:Catégorie:Fiches de lecture',
+	   'fr:Catégorie:Projets collaboratifs']
 for cat in cat_mon:
   title = unicode(cat, 'utf-8')
   page = pywikibot.page.Category(site, title)  # PWB crée un objet page_de_catégorie
@@ -60,7 +66,7 @@ title = u'fr:Catégorie:Recherches par facultés' # Recherches par facultés
 page = pywikibot.page.Category(site, title)     # objet Catégorie PWB
 gen_articles = page.articles(recurse=True)      # Liste récursives des atricles
 gen_articles = gen_to_list(gen_articles)        # transforme en liste python
-table_rdoc_in_cat = wmls_list_to_lua2(gen_articles)     # SANS LA VIRGULE FINALE transforme en code lua
+table_rdoc_in_cat = wmls_list_to_lua2(gen_articles)  # SANS LA VIRGULE FINALE transforme en code lua
 table_rdoc_in_cat = unicode(table_rdoc_in_cat, 'utf-8') 
 ### FIN collecte data
 
