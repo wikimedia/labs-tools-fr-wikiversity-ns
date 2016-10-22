@@ -137,7 +137,7 @@ def all_articles(category) :
   table_all_in_cat = unicode(table_all_in_cat, 'utf-8') # réponse au format unicode
   return table_all_in_cat
 
-t_rdoc_in_cat           = all_articles(title = u'fr:Catégorie:Recherches par facultés')
+t_rdoc_in_cat           = all_articles(u'fr:Catégorie:Recherches par facultés')
 t_projets_collaboratifs = all_articles(u'fr:Catégorie:Projets collaboratifs')
 
 ### FIN collecte data
