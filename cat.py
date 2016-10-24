@@ -14,8 +14,9 @@ ns_id = 14
 nsdata = ns_collect_data(ns_id) # Scan l'espace de noms collecte les données
 dict_page = nsdata['dict_page'] # reconnait le dictionnaire des pages
 
-### Liste des catégories `a superviser
-#   Ajoute la liste des sous-catégories et des artcicles
+### Liste des catégories à superviser
+#   Ajoute la liste des sous-catégories et des articles sous forme de paramètre pour la page
+#   subcats = liste des sous-catégories et articles = liste des articles dans la catégorie
 cat_mon = ['fr:Catégorie:Facultés',
 	   'fr:Catégorie:Départements',
 	   'fr:Catégorie:Départements de recherche',
@@ -24,21 +25,73 @@ cat_mon = ['fr:Catégorie:Facultés',
 	   'fr:Catégorie:Fiches de lecture',
 	   'fr:Catégorie:Projet collaboratif',
 	   'fr:Catégorie:Projets collaboratifs']
-for cat in cat_mon:
-  title = unicode(cat, 'utf-8')
-  page = pywikibot.page.Category(site, title)  # PWB crée un objet page_de_catégorie
+subcat_mon = ['fr:Catégorie:Projet collaboratif', 'fr:Catégorie:Recherches par facultés']
+l_categories = [] ### NOM VARIABLE
+l_subcats = []
+### L'analyse de quelques catégories nécessite celle de leurs sous-catégories
+#   c'est le cas Catégorie:Projet collaboratif et Recherches par facultés
+#   nous devons collecter la liste des sous-cat à ajouter à la liste précedente
+
+def get_subcats(subcat_mon): # récupère le titre des catégories dont on souhaite
+  # superviser les sous-catégories, inscrit les sous catégories dans une liste formatée
+  # ATTENTION var subcatS
+  for cat in subcat_mon :
+    title = unicode(cat, 'utf-8')  # UNICODE
+    page = pywikibot.page.Category(site, title)  # PWB crée un objet page_de_catégorie
+    subcats = page.subcategories() # generateur de sous-categories
+    subcats = gen_to_list(subcats) # convertion en liste py
+    for subcat in subcats :
+      l_subcats.append(subcat)
+  return l_subcats
+
+def format_list(): # Préparation de la liste format objet <class 'pywikibot.page.Category'>
+  for cat in cat_mon:
+    title = unicode(cat, 'utf-8')  # UNICODE
+    page = pywikibot.page.Category(site, title)  # PWB crée un objet page_de_catégorie
+    l_categories.append(page)
+  return l_categories
+
+def get_category_list(): # Retourne la liste filtrée et formatée des catégories à superviser
+  for subcat in l_subcats:
+    if subcat in l_categories:
+      pass # catégorie déjà inscrite
+    else:
+      l_categories.append(subcat) # incrit la catégorie dans la liste à superviser
+  return l_categories
+
+l_categories = format_list()
+l_subcats = get_subcats(subcat_mon)
+cat_monitor = get_category_list() 
+  
+#for cat in l_subcats :
+  #print type(cat)
+  #print cat
+#print len(l_subcats)    
+#print len(l_categories)
+
+#for cat in cat_monitor :
+  #print type(cat)
+  #print cat
+#print len(cat_monitor)
+ 
+
+for cat in cat_monitor:
+  #title = unicode(cat, 'utf-8')
+  ##title = cat
+  #page = pywikibot.page.Category(site, title)  # PWB crée un objet page_de_catégorie
+  page = cat
   page_prop = dict_page[page]
-  subcat = page.subcategories()
-  subcat = gen_to_list(subcat)
-  page_prop['subcat'] = subcat # ATTENTION var name articles, subcat(s)
+  subcats = page.subcategories()
+  subcats = gen_to_list(subcats)
+  page_prop['subcats'] = subcats # ATTENTION var name articles, subcat(s)
   articles = page.articles()
   articles = gen_to_list(articles)
   page_prop['articles'] = articles
   
-### Analyse le contenu de la catégorie donnée en title
-#   Pour chaque page/article dans la catégorie
-#   compile le titre de la catégorie homonyme
-#   Calcul le nombre de pages total dans chaque catégorie de manière récursive
+### Analyse le contenu de la catégorie donnée en title Départements
+#   Pour chaque page/article dans la catégorie ; compile le titre de la catégorie homonyme
+#   Calcul le nombre de pages total dans chaque catégorie de DEPARTEMENT de manière récursive
+#   TRANSFORMER en fonction dpt_cat_stat()
 title = u'fr:Catégorie:Départements'        # titre complet de la catégorie
 page = pywikibot.page.Category(site, title) # objet page PWB
 articles = page.articles()                  # génère la liste des articles
@@ -62,16 +115,18 @@ for article in articles:  # pour chaque article contenu dans la catégorie
       #print page_prop['all_in_cat']
 
 ### Collecte recursivement tous les articles de la catégorie Recherches par facultés
-#   enregistre une liste simple sous forme de table lua "t_rdoc_in_cat"
-title = u'fr:Catégorie:Recherches par facultés' # Recherches par facultés
-page = pywikibot.page.Category(site, title)     # objet Catégorie PWB
-gen_articles = page.articles(recurse=True)      # Liste récursives des atricles
-gen_articles = gen_to_list(gen_articles)        # transforme en liste python
-table_rdoc_in_cat = wmls_list_to_lua2(gen_articles)  # SANS LA VIRGULE FINALE transforme en code lua
-table_rdoc_in_cat = unicode(table_rdoc_in_cat, 'utf-8') 
-### fonction all_articles(category)
-#   retourne une table au format lua contenant la liste recursive des articles 
-#   contenu dans la catégorie et ses sous-cat. 
+#   enregistre  "t_rdoc_in_cat"
+
+#title = u'fr:Catégorie:Recherches par facultés' # Recherches par facultés
+#page = pywikibot.page.Category(site, title)     # objet Catégorie PWB
+#gen_articles = page.articles(recurse=True)      # Liste récursives des atricles
+#gen_articles = gen_to_list(gen_articles)        # transforme en liste python
+#table_rdoc_in_cat = wmls_list_to_lua2(gen_articles)  # SANS LA VIRGULE FINALE transforme en code lua
+#table_rdoc_in_cat = unicode(table_rdoc_in_cat, 'utf-8') 
+
+### fonction all_articles(category) ABANDONNER CETTE APPROCHE 
+#   retourne une liste simple sous forme de table lua contenant la liste recursive des articles 
+#   contenu dans la catégorie et ses sous-cat.
 #   Ensuite, il faut Ajouter la table au module ns categorie
 def all_articles(category) :
   title = category
@@ -82,6 +137,7 @@ def all_articles(category) :
   table_all_in_cat = unicode(table_all_in_cat, 'utf-8') # réponse au format unicode
   return table_all_in_cat
 
+t_rdoc_in_cat           = all_articles(u'fr:Catégorie:Recherches par facultés')
 t_projets_collaboratifs = all_articles(u'fr:Catégorie:Projets collaboratifs')
 
 ### FIN collecte data
@@ -89,42 +145,42 @@ t_projets_collaboratifs = all_articles(u'fr:Catégorie:Projets collaboratifs')
 table_prop_code = wlms_table_prop(ns_id, nsdata)  # la table des propriétés de l'espace de noms
 table_pages_code = wlms_table(dict_page, 'pages') # la table des pages
 # Concatener le code Lua ici
-lua_code = table_prop_code + table_pages_code + 'p.t_rdoc_in_cat = ' + table_rdoc_in_cat # Concatener le code Lua
+lua_code = table_prop_code + table_pages_code + 'p.t_rdoc_in_cat = ' + t_rdoc_in_cat # Concatener le code Lua
 lua_code = lua_code + 'p.t_projets_collaboratifs = ' + t_projets_collaboratifs
 module_name = u'ns_' + nsdata['label']  # enregistre le module du namespace
 #print lua_code                         # TEST affiche le code du module
 write_module_lua(module_name, lua_code) # Ecriture du module #TEST 
 
-# Notes
-# class category(page)
-# articles()
-#     |      Yield all articles in the current category..> all pages not categories
-# isEmptyCategory(self, *args, **kwargs)
-#  Return True if category has no members (including subcategories).
-# isHiddenCategory(self, *args, **kwargs)
-#     |      Return True if the category is hidden.
-# members(self, recurse=False, namespaces=None, step=None, total=None, content=False)
-#     |      Yield all category contents (subcats, pages, and files).
-# subcategories(*__args, **__kw)
-#     |      Iterate all subcategories of the current category.
-#########
-# method from page
-# getCategoryRedirectTarget(self)
-#     |      If this is a category redirect, return the target category title.
-# isCategory(self)
-#            Return True if the page is a Category, False otherwise.
-# isCategoryRedirect(self)
-#            Return True if this is a category redirect page, False otherwise.
-#########
-#    Catégorie:Facultés
-#    Catégorie:Départements
-#    Catégorie:Départements de recherche
-#    Catégorie:Recherches par facultés
+############# NOTES                ####################################################
+############# CLASS CATEGORY(PAGE) ####################################################
+## articles()
+##     |      Yield all articles in the current category..> all pages not categories
+## isEmptyCategory(self, *args, **kwargs)
+##  Return True if category has no members (including subcategories).
+## isHiddenCategory(self, *args, **kwargs)
+##     |      Return True if the category is hidden.
+## members(self, recurse=False, namespaces=None, step=None, total=None, content=False)
+##     |      Yield all category contents (subcats, pages, and files).
+## subcategories(*__args, **__kw)
+##     |      Iterate all subcategories of the current category.
+##########
+## method from page
+## getCategoryRedirectTarget(self)
+##     |      If this is a category redirect, return the target category title.
+## isCategory(self)
+##            Return True if the page is a Category, False otherwise.
+## isCategoryRedirect(self)
+##            Return True if this is a category redirect page, False otherwise.
+##########
+##    Catégorie:Facultés
+##    Catégorie:Départements
+##    Catégorie:Départements de recherche
+##    Catégorie:Recherches par facultés
 
-## Annotations
-# en collectant les boléesna empty et hidden pour chaque page (execution ligne de commande locale),
-# le script dure 15 minutes
-# en ajoutant les articles, subcats et membres le script dure plus de 30 min et echoue lors de la
-# sauvegarde "toobigdata"
-# 
+### Annotations
+## en collectant les boléesna empty et hidden pour chaque page (execution ligne de commande locale),
+## le script dure 15 minutes
+## en ajoutant les articles, subcats et membres le script dure plus de 30 min et echoue lors de la
+## sauvegarde "toobigdata"
+## 
 
