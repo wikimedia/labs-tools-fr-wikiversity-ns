@@ -140,6 +140,7 @@ for article in articles:  # pour chaque article contenu dans la catégorie
 
 table_prop_code = wlms_table_prop(ns_id, nsdata)  # la table des propriétés de l'espace de noms
 table_pages_code = wlms_table(dict_page, 'pages') # la table des pages
+lua_code = table_prop_code + table_pages_code
 # Concatener le code Lua ici
 #lua_code = table_prop_code + table_pages_code + 'p.t_rdoc_in_cat = ' + t_rdoc_in_cat # Concatener le code Lua
 #lua_code = lua_code + 'p.t_projets_collaboratifs = ' + t_projets_collaboratifs
