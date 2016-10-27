@@ -20,7 +20,7 @@ dict_page = nsdata['dict_page'] # reconnait le dictionnaire des pages
 cat_mon = ['fr:Catégorie:Facultés',
 	   'fr:Catégorie:Départements',
 	   'fr:Catégorie:Départements de recherche',
-	   'fr:Catégorie:Recherches par facultés',
+	   'fr:Catégorie:Recherches par facultés', #
 	   'fr:Catégorie:Laboratoire de recherche',
 	   'fr:Catégorie:Fiches de lecture',
 	   'fr:Catégorie:Projet collaboratif',

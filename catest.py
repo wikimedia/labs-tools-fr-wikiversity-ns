@@ -32,53 +32,49 @@ l_subcats = []
 #   c'est le cas Catégorie:Projet collaboratif et Recherches par facultés
 #   nous devons collecter la liste des sous-cat à ajouter à la liste précedente
 
+### Recherche récursive de toutes les sous-catégories
+#   ajoute les sous-catégories à la liste à monitorer sous forme d'bjets PWB
+def recursive_subcats(category, monitor): # Reçoit un objet catégorie PWB, et une liste de catégorie
+  templist = [] # Liste pour controler la présence de  sous-pages
+  monitor.append(category)       # copie la catégorie dans la liste MONITORliste
+  gen = category.subcategories() # genère la liste des sous-catégorie 
+  for sub in gen :
+    recursive_subcats(sub, monitor)
+  return monitor
+
 def get_subcats(subcat_mon): # récupère le titre des catégories dont on souhaite
   # superviser les sous-catégories, inscrit les sous catégories dans une liste formatée
-  # ATTENTION var subcatS
+  # ATTENTION recursif
   for cat in subcat_mon :
     title = unicode(cat, 'utf-8')  # UNICODE
     page = pywikibot.page.Category(site, title)  # PWB crée un objet page_de_catégorie
-    subcats = page.subcategories() # generateur de sous-categories
-    subcats = gen_to_list(subcats) # convertion en liste py
-    for subcat in subcats :
-      l_subcats.append(subcat)
-  return l_subcats
+    monitor = recursive_subcats(page, l_subcats) # Ajout recursif des sous-pages
+  return monitor
 
-def format_list(): # Préparation de la liste format objet <class 'pywikibot.page.Category'>
-  for cat in cat_mon:
+def format_list(cat_list): # Préparation de la liste format objet <class 'pywikibot.page.Category'>
+  for cat in cat_list:
     title = unicode(cat, 'utf-8')  # UNICODE
     page = pywikibot.page.Category(site, title)  # PWB crée un objet page_de_catégorie
     l_categories.append(page)
   return l_categories
 
-def get_category_list(): # Retourne la liste filtrée et formatée des catégories à superviser
+def get_category_list():        # Retourne la liste filtrée et formatée des catégories à superviser
   for subcat in l_subcats:
-    if subcat in l_categories:
-      pass # catégorie déjà inscrite
+    if subcat in l_categories:  # Verifie si déja inscrite
+      pass                      # catégorie déjà inscrite
     else:
       l_categories.append(subcat) # incrit la catégorie dans la liste à superviser
   return l_categories
 
-l_categories = format_list()
+l_categories = format_list(cat_mon) # formate les entrées en objet category PWB
 l_subcats = get_subcats(subcat_mon)
 cat_monitor = get_category_list() 
-  
-#for cat in l_subcats :
-  #print type(cat)
-  #print cat
-#print len(l_subcats)    
-#print len(l_categories)
 
-#for cat in cat_monitor :
-  #print type(cat)
+#for cat in cat_monitor:
   #print cat
 #print len(cat_monitor)
- 
 
 for cat in cat_monitor:
-  #title = unicode(cat, 'utf-8')
-  ##title = cat
-  #page = pywikibot.page.Category(site, title)  # PWB crée un objet page_de_catégorie
   page = cat
   page_prop = dict_page[page]
   subcats = page.subcategories()
@@ -124,29 +120,29 @@ for article in articles:  # pour chaque article contenu dans la catégorie
 #table_rdoc_in_cat = wmls_list_to_lua2(gen_articles)  # SANS LA VIRGULE FINALE transforme en code lua
 #table_rdoc_in_cat = unicode(table_rdoc_in_cat, 'utf-8') 
 
-### fonction all_articles(category) ABANDONNER CETTE APPROCHE 
-#   retourne une liste simple sous forme de table lua contenant la liste recursive des articles 
-#   contenu dans la catégorie et ses sous-cat.
-#   Ensuite, il faut Ajouter la table au module ns categorie
-def all_articles(category) :
-  title = category
-  page = pywikibot.page.Category(site, title)     # objet Catégorie PWB
-  gen_articles = page.articles(recurse=True)      # Liste récursives des articles
-  gen_articles = gen_to_list(gen_articles)        # transforme en liste python
-  table_all_in_cat = wmls_list_to_lua2(gen_articles)    # SANS LA VIRGULE FINALE transforme en code lua
-  table_all_in_cat = unicode(table_all_in_cat, 'utf-8') # réponse au format unicode
-  return table_all_in_cat
+#### fonction all_articles(category) ABANDONNER CETTE APPROCHE 
+##   retourne une liste simple sous forme de table lua contenant la liste recursive des articles 
+##   contenu dans la catégorie et ses sous-cat.
+##   Ensuite, il faut Ajouter la table au module ns categorie
+#def all_articles(category) :
+  #title = category
+  #page = pywikibot.page.Category(site, title)     # objet Catégorie PWB
+  #gen_articles = page.articles(recurse=True)      # Liste récursives des articles
+  #gen_articles = gen_to_list(gen_articles)        # transforme en liste python
+  #table_all_in_cat = wmls_list_to_lua2(gen_articles)    # SANS LA VIRGULE FINALE transforme en code lua
+  #table_all_in_cat = unicode(table_all_in_cat, 'utf-8') # réponse au format unicode
+  #return table_all_in_cat
 
-t_rdoc_in_cat           = all_articles(u'fr:Catégorie:Recherches par facultés')
-t_projets_collaboratifs = all_articles(u'fr:Catégorie:Projets collaboratifs')
+#t_rdoc_in_cat           = all_articles(u'fr:Catégorie:Recherches par facultés')
+#t_projets_collaboratifs = all_articles(u'fr:Catégorie:Projets collaboratifs')
 
 ### FIN collecte data
 
 table_prop_code = wlms_table_prop(ns_id, nsdata)  # la table des propriétés de l'espace de noms
 table_pages_code = wlms_table(dict_page, 'pages') # la table des pages
 # Concatener le code Lua ici
-lua_code = table_prop_code + table_pages_code + 'p.t_rdoc_in_cat = ' + t_rdoc_in_cat # Concatener le code Lua
-lua_code = lua_code + 'p.t_projets_collaboratifs = ' + t_projets_collaboratifs
+#lua_code = table_prop_code + table_pages_code + 'p.t_rdoc_in_cat = ' + t_rdoc_in_cat # Concatener le code Lua
+#lua_code = lua_code + 'p.t_projets_collaboratifs = ' + t_projets_collaboratifs
 module_name = u'ns_' + nsdata['label']  # enregistre le module du namespace
 #print lua_code                         # TEST affiche le code du module
 write_module_lua(module_name, lua_code) # Ecriture du module #TEST 
