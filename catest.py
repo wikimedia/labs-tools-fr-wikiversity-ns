@@ -110,32 +110,6 @@ for article in articles:  # pour chaque article contenu dans la catégorie
       page_prop['all_in_cat'] = c  # Enregistre le nombre dans la propriété all_in_cat de la page
       #print page_prop['all_in_cat']
 
-### Collecte recursivement tous les articles de la catégorie Recherches par facultés
-#   enregistre  "t_rdoc_in_cat"
-
-#title = u'fr:Catégorie:Recherches par facultés' # Recherches par facultés
-#page = pywikibot.page.Category(site, title)     # objet Catégorie PWB
-#gen_articles = page.articles(recurse=True)      # Liste récursives des atricles
-#gen_articles = gen_to_list(gen_articles)        # transforme en liste python
-#table_rdoc_in_cat = wmls_list_to_lua2(gen_articles)  # SANS LA VIRGULE FINALE transforme en code lua
-#table_rdoc_in_cat = unicode(table_rdoc_in_cat, 'utf-8') 
-
-#### fonction all_articles(category) ABANDONNER CETTE APPROCHE 
-##   retourne une liste simple sous forme de table lua contenant la liste recursive des articles 
-##   contenu dans la catégorie et ses sous-cat.
-##   Ensuite, il faut Ajouter la table au module ns categorie
-#def all_articles(category) :
-  #title = category
-  #page = pywikibot.page.Category(site, title)     # objet Catégorie PWB
-  #gen_articles = page.articles(recurse=True)      # Liste récursives des articles
-  #gen_articles = gen_to_list(gen_articles)        # transforme en liste python
-  #table_all_in_cat = wmls_list_to_lua2(gen_articles)    # SANS LA VIRGULE FINALE transforme en code lua
-  #table_all_in_cat = unicode(table_all_in_cat, 'utf-8') # réponse au format unicode
-  #return table_all_in_cat
-
-#t_rdoc_in_cat           = all_articles(u'fr:Catégorie:Recherches par facultés')
-#t_projets_collaboratifs = all_articles(u'fr:Catégorie:Projets collaboratifs')
-
 ### FIN collecte data
 
 table_prop_code = wlms_table_prop(ns_id, nsdata)  # la table des propriétés de l'espace de noms
@@ -174,10 +148,32 @@ write_module_lua(module_name, lua_code) # Ecriture du module #TEST
 ##    Catégorie:Départements de recherche
 ##    Catégorie:Recherches par facultés
 
-### Annotations
+############################## ANNOTATIONS #################################################
 ## en collectant les boléesna empty et hidden pour chaque page (execution ligne de commande locale),
 ## le script dure 15 minutes
 ## en ajoutant les articles, subcats et membres le script dure plus de 30 min et echoue lors de la
 ## sauvegarde "toobigdata"
 ## 
 
+############################## METHODE ABANDONNÉE ##########################################
+### Collecte recursivement tous les articles de la catégorie enregistre  "t_rdoc_in_cat" ###
+#title = u'fr:Catégorie:Recherches par facultés' # Recherches par facultés
+#page = pywikibot.page.Category(site, title)     # objet Catégorie PWB
+#gen_articles = page.articles(recurse=True)      # Liste récursives des atricles
+#gen_articles = gen_to_list(gen_articles)        # transforme en liste python
+#table_rdoc_in_cat = wmls_list_to_lua2(gen_articles)  # SANS LA VIRGULE FINALE transforme en code lua
+#table_rdoc_in_cat = unicode(table_rdoc_in_cat, 'utf-8') 
+#### fonction all_articles(category) ABANDONNER CETTE APPROCHE 
+##   retourne une liste simple sous forme de table lua contenant la liste recursive des articles 
+##   contenu dans la catégorie et ses sous-cat.
+##   Ensuite, il faut Ajouter la table au module ns categorie
+#def all_articles(category) :
+  #title = category
+  #page = pywikibot.page.Category(site, title)     # objet Catégorie PWB
+  #gen_articles = page.articles(recurse=True)      # Liste récursives des articles
+  #gen_articles = gen_to_list(gen_articles)        # transforme en liste python
+  #table_all_in_cat = wmls_list_to_lua2(gen_articles)    # SANS LA VIRGULE FINALE transforme en code lua
+  #table_all_in_cat = unicode(table_all_in_cat, 'utf-8') # réponse au format unicode
+  #return table_all_in_cat
+#t_rdoc_in_cat           = all_articles(u'fr:Catégorie:Recherches par facultés')
+#t_projets_collaboratifs = all_articles(u'fr:Catégorie:Projets collaboratifs')
