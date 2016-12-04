@@ -25,12 +25,13 @@ cat_mon = ['fr:Catégorie:Facultés',
 	   'fr:Catégorie:Fiches de lecture',
 	   'fr:Catégorie:Projet collaboratif',
 	   'fr:Catégorie:Projets collaboratifs']
-subcat_mon = ['fr:Catégorie:Projet collaboratif', 'fr:Catégorie:Recherches par facultés', 'Catégorie:Facultés thèmes']
-l_categories = [] ### NOM VARIABLE
-l_subcats = []
 ### L'analyse de quelques catégories nécessite celle de leurs sous-catégories
 #   c'est le cas Catégorie:Projet collaboratif et Recherches par facultés
 #   nous devons collecter la liste des sous-cat à ajouter à la liste précedente
+subcat_mon = ['fr:Catégorie:Projet collaboratif', 'fr:Catégorie:Recherches par facultés', 'Catégorie:Facultés thèmes']
+l_categories = [] ### NOM VARIABLE
+l_subcats = []
+
 
 ### Recherche récursive de toutes les sous-catégories
 #   ajoute les sous-catégories à la liste à monitorer sous forme d'bjets PWB
@@ -73,7 +74,7 @@ cat_monitor = get_category_list()
 #for cat in cat_monitor:
   #print cat
 #print len(cat_monitor)
-
+###
 for cat in cat_monitor:
   page = cat
   page_prop = dict_page[page]
@@ -83,7 +84,36 @@ for cat in cat_monitor:
   articles = page.articles()
   articles = gen_to_list(articles)
   page_prop['articles'] = articles
+###
+##########
+def get_linked_cat(collector_file):
+  title = collector_file
+  page = pywikibot.Page(site, title) # objet page  PWB
+  lcat = get_linked_p(page, 14)
+  lcat = gen_to_list(lcat)
+  return lcat
   
+def count_recursive_subcats(lcat): # Compte recursif des pages dans les sous-catégories
+  for cat in lcat :
+    subcats = cat.subcategories()
+    count_recursive(subcats)
+  
+def count_recursive(subcats) :
+  for subcat in subcats :
+    all_in_cat = subcat.articles(recurse=True)  # liste recursive de tous les articles cat et subcat
+    all_in_cat = gen_to_list(all_in_cat)
+    all_in_cat = len(all_in_cat)
+    page_prop = dict_page[subcat]
+    page_prop['all_in_cat'] = all_in_cat
+    #print all_in_cat
+
+###
+collector_file = u'fr:Projet:Laboratoire/Espaces de noms/Catégorie/Comptage récursif'
+lcat = get_linked_cat(collector_file)
+#print l
+count_recursive_subcats(lcat)
+##########    
+###
 ### Analyse le contenu de la catégorie donnée en title Départements
 #   Pour chaque page/article dans la catégorie ; compile le titre de la catégorie homonyme
 #   Calcul le nombre de pages total dans chaque catégorie de DEPARTEMENT de manière récursive
@@ -109,7 +139,7 @@ for article in articles:  # pour chaque article contenu dans la catégorie
     if page == title:              #  
       page_prop['all_in_cat'] = c  # Enregistre le nombre dans la propriété all_in_cat de la page
       #print page_prop['all_in_cat']
-
+###
 ### FIN collecte data
 
 table_prop_code = wlms_table_prop(ns_id, nsdata)  # la table des propriétés de l'espace de noms

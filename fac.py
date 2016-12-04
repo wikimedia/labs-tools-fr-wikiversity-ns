@@ -18,15 +18,8 @@ def chk_lnk_dpt(dict_page) :
     page_prop = dict_page[page]
     count_dpt = 0  # n_dpt calcul le nombre de départements pour la faculté
     if page_prop['nsep'] == 0 :         # ATTENTION tjrs les racines nb_sep = 0 donc page racine 
-      ## construire l'objet page pour la sous-page ~/Départements
       ldpt = check_link_in_subpage(page, '/Départements', 108) # BUG corrigé :ventilation des départements
-      #gen_dpt = get_linked_p(page, 108) # Récupère la liste des liens vers l'espace departement 
-      #list_dpt = []                     # initialise une liste vide 
-      #for g in gen_dpt:                 # Pour chaque lien dans le générateur
-	#list_dpt.append(g)              # place le lien dans la liste
       page_prop['ldpt'] = ldpt      # ajoute listes departement aux propriétés de la faculté      
-      #for dpt in ldpt:              # pour chaque département
-	#count_dpt = count_dpt + 1       # Compte le nombre de départements
       page_prop['n_dpt'] = len(ldpt)  # ajoute le nombre aux propriétés
   return dict_page
 
@@ -41,11 +34,6 @@ def tupleinvert():
     if page_prop['nsep'] == 0:  # Filtre des pages racines
       for departement in page_prop['ldpt' ]: # pour chaque departement dans cette faculté
 	dpt_params = {}                      # initialise DICTIONNAIRE des prop du dept
-	#redir = departement.isRedirectPage() # test redir
-	#target_departement = ''
-	#if redir == True:
-	#  target_departement = departement.getRedirectTarget()
-	#dpt_params['cible'] = target_departement
 	if not departement in dpt_fac:   # Si le departement n'est pas dans le tuple inverse
           l_fac = []                     # Initialise Liste des faculté pour ce departement
           l_fac.append(page)             # Ajoute la faculté dans la liste  

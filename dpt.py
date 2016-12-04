@@ -26,17 +26,9 @@ for p in dict_root_sub: # A VERIFIER bcp de code
   page_prop = dict_root_sub[p]      # p
   [niveau, date1, cible, lsp] = page_prop #??? VERIFIER 
   theme = check_link_in_subpage(p, '/Leçons par thèmes', 0)
-  #theme = check_lessons_in_sp(p, '/Leçons par thèmes', 0)  # place les liens dans generateur 
   niveau = check_link_in_subpage(p, '/Leçons par niveaux', 0)
-  #niveau = check_lessons_in_sp(p, '/Leçons par niveaux', 0)
   rch_out = check_link_in_subpage(p, '/Leçons par thèmes', 104)
-  #rch_out = check_lessons_in_sp(p, '/Leçons par thèmes', 104)
   l_rch   = check_link_in_subpage(p, '/Travaux de recherche', 104)
-  #l_rch   = check_lessons_in_sp(p, '/Travaux de recherche', 104)
-  #theme   = gen_to_list(theme)
-  #niveau  = gen_to_list(niveau)
-  #rch_out = gen_to_list(rch_out)
-  #l_rch   = gen_to_list(l_rch)
   f_niveau = []          # pour filtrer les doublons qui ne sont pas déjà dans la sous-page Leçons par thèmes
   for lesson in niveau:  # de la sous-page Leçons par niveaux
     if lesson in theme:  # 
