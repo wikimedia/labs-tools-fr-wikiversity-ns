@@ -25,7 +25,7 @@ cat_mon = ['fr:Catégorie:Facultés',
 	   'fr:Catégorie:Fiches de lecture',
 	   'fr:Catégorie:Projet collaboratif',
 	   'fr:Catégorie:Projets collaboratifs']
-subcat_mon = ['fr:Catégorie:Projet collaboratif', 'fr:Catégorie:Recherches par facultés']
+subcat_mon = ['fr:Catégorie:Projet collaboratif', 'fr:Catégorie:Recherches par facultés', 'Catégorie:Facultés thèmes']
 l_categories = [] ### NOM VARIABLE
 l_subcats = []
 ### L'analyse de quelques catégories nécessite celle de leurs sous-catégories
