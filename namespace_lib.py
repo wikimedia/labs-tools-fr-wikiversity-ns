@@ -56,7 +56,7 @@ def ns_get_date(dict_page, prefix_list, label):
 #   utilise un dictionnaire pour page_prop
 def ns_collect_data(ns_id):
   ns_label = site.namespace(ns_id) # Label local du namespace
-  allpages = site.allpages(namespace=ns_id, limit=30)  #TEST # générateur de toutes les pages de l'espace
+  allpages = site.allpages(namespace=ns_id) #, limit=30)  #TEST # générateur de toutes les pages de l'espace
   total, redirection, racine, sous_page= 0, 0, 0, 0 # initialise les prop de l'espace
   resep = re.compile('/')     # Regex pour le separateur de sous-pages
   dict_page = {}              # Initialise le dictionnaire principal des pages

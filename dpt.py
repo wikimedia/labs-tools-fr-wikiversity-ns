@@ -67,8 +67,8 @@ table_pages_code = wlms_table_pages(dict_page)   # Écrit la table Lua des pages
 lua_code = table_prop_code + table_pages_code    # Concatener le code Lua
 
 module_name = u'ns_' + nsdata['label']  # enregistre le module du namespace
-print lua_code                         # TEST affiche le code du module
-# write_module_lua(module_name, lua_code) # Ecriture du module #TEST 
+#print lua_code                         # TEST affiche le code du module
+write_module_lua(module_name, lua_code) # Ecriture du module #TEST 
 
 #### CHK SUB FOR LNK --- AMELIORER
 ##   Cherche les liens dans les sous-pages 
