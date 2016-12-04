@@ -9,6 +9,23 @@ lang = 'fr'
 family = 'wikiversity'
 site = pywikibot.Site(lang, family) 
 
+
+### Cherche les liens contenus dans la sous-page
+#   Reçoit l'objet page la chaine de la sous-page 
+#   et le numero de l'espace de noms de destination des liens
+#   (0 principal, 104 Rch, 108 Dpt) fac.py - dpt.py
+def check_link_in_subpage(page, sub, nsid): # sub contient le nom de la sous-page
+  title = str(page)               # Convertit en sub
+  title = title[2:-2] + sub          # ajoute les crochets
+  title = unicode(title, 'utf-8')    # Convertit en unicode
+  page = pywikibot.Page(site, title) # Créé un objet page PWB 
+  exist = page.exists()              # Test si la page existe
+  links = [] # il faut une liste même vide pour certains calculs
+  if exist:
+    links = get_linked_p(page, nsid) # titre de la page et namespace id RECUPERER le numero en argument
+    links = gen_to_list(links)         # convertit le générateur en liste python
+  return links # retourner une LISTE 
+
 ### gen_to_list(gen, list) VERIFIER
 #   reçoit un générateur PWB retourne une liste Python
 #   le nom doit être le même des 2 coté de l'egalité ex: myname=gen_to_list(myname)
@@ -39,7 +56,7 @@ def ns_get_date(dict_page, prefix_list, label):
 #   utilise un dictionnaire pour page_prop
 def ns_collect_data(ns_id):
   ns_label = site.namespace(ns_id) # Label local du namespace
-  allpages = site.allpages(namespace=ns_id)#, limit=30)  #TEST # générateur de toutes les pages de l'espace
+  allpages = site.allpages(namespace=ns_id, limit=30)  #TEST # générateur de toutes les pages de l'espace
   total, redirection, racine, sous_page= 0, 0, 0, 0 # initialise les prop de l'espace
   resep = re.compile('/')     # Regex pour le separateur de sous-pages
   dict_page = {}              # Initialise le dictionnaire principal des pages
@@ -84,7 +101,7 @@ def prefix(p, lang, label):
 
 ### Scinde les pages racine et sous pages
 #   lit le dictionnaire des pages analyse le nombre de separateurs
-def merge_sub2 (mydict): # RENOMMER
+def merge_sub2(mydict): # RENOMMER
   dict_racine = {}       # Dictionnaire des pages racines
   dict_sub = {}          # Dictionnaire des sous-pages
   for page in mydict:
