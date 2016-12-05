@@ -23,8 +23,7 @@ cat_mon = ['fr:Catégorie:Facultés',
 	   'fr:Catégorie:Recherches par facultés',
 	   'fr:Catégorie:Laboratoire de recherche',
 	   'fr:Catégorie:Fiches de lecture',
-	   'fr:Catégorie:Projet collaboratif',
-	   'fr:Catégorie:Projets collaboratifs']
+	   'fr:Catégorie:Projet collaboratif',]
 ### L'analyse de quelques catégories nécessite celle de leurs sous-catégories
 #   c'est le cas Catégorie:Projet collaboratif et Recherches par facultés
 #   nous devons collecter la liste des sous-cat à ajouter à la liste précedente
