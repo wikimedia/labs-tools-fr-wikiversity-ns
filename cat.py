@@ -28,7 +28,7 @@ cat_mon = ['fr:Catégorie:Facultés',
 ### L'analyse de quelques catégories nécessite celle de leurs sous-catégories
 #   c'est le cas Catégorie:Projet collaboratif et Recherches par facultés
 #   nous devons collecter la liste des sous-cat à ajouter à la liste précedente
-subcat_mon = ['fr:Catégorie:Projet collaboratif', 'fr:Catégorie:Recherches par facultés', 'Catégorie:Facultés thèmes']
+subcat_mon = ['fr:Catégorie:Projet collaboratif', 'fr:Catégorie:Recherches par facultés'] # ça plante: 'Catégorie:Facultés thèmes'
 l_categories = [] ### NOM VARIABLE
 l_subcats = []
 
