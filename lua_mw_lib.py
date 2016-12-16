@@ -38,9 +38,9 @@ def wlms_table(python_dict, table_name):    # La fonction reçoit un dictionnair
   t = unicode(t, 'utf_8')
   return t
 
-### wmls_table_input() AMELIORER la fonction reçoit le dictionnaire
-#   page_prop
-#   Il faut reproduire tous les tests pour type=dict
+### wmls_table_input() AMELIORER la fonction reçoit le dictionnaire page_prop
+#   TESTER type = int
+#   Il faut reproduire les tests pour type=dict
 def wmls_table_input(page_prop):
   t = ''
   for prop in page_prop:
@@ -56,8 +56,12 @@ def wmls_table_input(page_prop):
 	# il faudrait tester le type de chaque valeur autre sous-fonction
 	mydict = page_prop[prop]
 	for key in mydict:
-	  v = mydict[key]
-	  t = t + str(key) + ' = ' + wmls_list_to_lua(v) # Ce sont des listes
+	  v = mydict[key] 
+	  # Rustine pour d_lessons AMéliorer :
+	  if type(v) == int :
+	    t = t + str(key) + ' = ' + str(v) + ', ' # Ce sont des entiers
+	  if type(v) == list : 
+	    t = t + str(key) + ' = ' + wmls_list_to_lua(v)   # Ce sont des listes
     else:
       t = t + str(prop) + ' = ' + str(page_prop[prop]) + ', '  # formate k, v
   t = t + wmls_table_next  # ferme la table ajoute une virgule
