@@ -68,7 +68,7 @@ def ns_collect_data(ns_id):
     redir = page.isRedirectPage()    # Test si la page est une redirection
     if redir == True:                # OUI
       cible= page.getRedirectTarget()    # la cible devient la valeur redirigée
-      redirection = redirection +1       # compteur de redirections
+      redirection = redirection + 1       # compteur de redirections
     regen = re.findall(resep, str(page)) # Cherche tous les separateurs dans le nom de la page
     nb_sep = len(regen)                  # determine le nombre de separateurs
     if nb_sep<1 :              # Pas de separateur

@@ -14,18 +14,14 @@ def get_linked_cat(collector_file):  # Reçoit le titre du formulaire d'inscript
   return gen_cat   # Retourne un generateur contenant la liste des catégories à superviser
 
 def get_members(collected_cat) :
-  for cat in collected_cat:
-    #print cat
-    page = cat
-    page_prop = dict_page[page]
-    subcats = page.subcategories()
-    subcats = gen_to_list(subcats)
+  for page in collected_cat:
+    page_prop = dict_page[page]  # propriétés de la page
+    subcats = page.subcategories() # PWB generateur de sous-catégories
+    subcats = list(subcats)	   # conversion en liste
     page_prop['subcats'] = subcats # ATTENTION var name articles, subcat(s)
-    articles = page.articles()
-    articles = gen_to_list(articles)
+    articles = page.articles()     # PWB generateur des articles
+    articles = list(articles)      # conversion en liste
     page_prop['articles'] = articles
-    #print page_prop['articles']
-    #print page_prop['subcats']
 
 def get_subcats_in(gen_cat): # Retourne gen subcats pour chaque cat in collected
   all_subcats = []           # Une liste contenant des generators
