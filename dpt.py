@@ -44,13 +44,20 @@ for p in dict_root_sub: # A VERIFIER bcp de code
     else:
       pass
   d_lesson['l_theme']  = theme          # les stats des leçons dans un dictionnaire
+  d_lesson['n_theme']  = len(theme)
   d_lesson['l_niveau'] = niveau
-  d_lesson['l_add']    = f_niveau
-  d_lesson['all_lessons'] = all_lessons # ajoute la liste des leçons fusionnée
-  d_lesson['l_exist']   = lesson_exist
-  d_lesson['rch_out']   = rch_out
-  d_lesson['l_rch']     = l_rch
-  page_prop['d_lesson'] = d_lesson      # Ajout du dictionnaire des leçons
+  d_lesson['n_niveau'] = len(niveau)
+  d_lesson['l_add']    = f_niveau	# Liste liens Uniquement depuis Leçons par niveaux
+  d_lesson['n_add']    = len(f_niveau)	# Nombre de liens Uniquement depuis Leçons par niveaux
+  d_lesson['all_lessons'] = all_lessons # ajoute la liste des leçons fusionnée RENOMMER l_lessons
+  d_lesson['n_lessons'] = len(all_lessons)
+  d_lesson['l_exist']   = lesson_exist	# Liste des liens vers espace principal
+  d_lesson['n_exist']   = len(lesson_exist)
+  d_lesson['rch_out']   = rch_out	# Liste des liens recherche mal placés
+  d_lesson['n_rch_out']	= len(rch_out)
+  d_lesson['l_rch']     = l_rch		# Liste des liens vers travaux de recherche
+  d_lesson['n_rch']	= len(l_rch)    # Ajout du nombre de travaux de recherche
+  page_prop['d_lesson'] = d_lesson      # Ajout du dictionnaire des leçons RENOMMER D_LINKS
   dict_root_sub[p]      = page_prop     # Actualise les propriétes de la page???
 
 table_prop_code = wlms_table_prop(ns_id, nsdata) # Écrit la table Lua des propriétés de l'espace de noms
