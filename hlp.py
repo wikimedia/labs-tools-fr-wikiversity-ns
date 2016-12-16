@@ -25,3 +25,8 @@ module_name = u'ns_' + nsdata['label']  # enregistre le module du namespace
 #print lua_code                         # TEST affiche le code du module
 write_module_lua(module_name, lua_code) # Ecriture du module #TEST 
 
+### DISCUSSIONS NAMESPACES
+# ns_talk_id = ns_id + 1
+# nstalk = ns_collect_data(ns_talk_id)  # Scan l'espace de noms VERSION 2
+# dict_talk_page = nstalk['dict_talk_page']
+
