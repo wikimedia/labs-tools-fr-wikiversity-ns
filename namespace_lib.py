@@ -11,9 +11,9 @@ site = pywikibot.Site(lang, family)
 
 
 ### Cherche les liens contenus dans la sous-page
-#   Reçoit l'objet page la chaine de la sous-page 
-#   et le numero de l'espace de noms de destination des liens
-#   (0 principal, 104 Rch, 108 Dpt) fac.py - dpt.py
+#   Reçoit l'objet page, la chaine de la sous-page et le numero de l'espace de noms 
+#   de destination des liens. Retourne une liste.
+#   (0 principal, 104 Rch, 108 Dpt) fac.py - dpt.py - rch.py
 def check_link_in_subpage(page, sub, nsid): # sub contient le nom de la sous-page
   title = str(page)               # Convertit en sub
   title = title[2:-2] + sub          # ajoute les crochets
@@ -23,17 +23,8 @@ def check_link_in_subpage(page, sub, nsid): # sub contient le nom de la sous-pag
   links = [] # il faut une liste même vide pour certains calculs
   if exist:
     links = get_linked_p(page, nsid) # titre de la page et namespace id RECUPERER le numero en argument
-    links = gen_to_list(links)         # convertit le générateur en liste python
+    links = list(links)              # convertit le générateur en liste python
   return links # retourner une LISTE 
-
-### gen_to_list(gen, list) VERIFIER
-#   reçoit un générateur PWB retourne une liste Python
-#   le nom doit être le même des 2 coté de l'egalité ex: myname=gen_to_list(myname)
-def gen_to_list(gen_name):
-  list_name = []
-  for g in gen_name:
-    list_name.append(g)
-  return list_name
   
 ### Collecte les dates de 1ere revision
 #   place le timestamp dans la clé 'date1'
@@ -95,7 +86,7 @@ def ns_collect_data(ns_id):
   return prop
 
   
-def prefix(p, lang, label):
+def prefix(p, lang, label): # DOCUMENTER AMELIORER
   prefixed = lang + ':' + label + ':' + p
   return prefixed
 
@@ -142,3 +133,12 @@ def get_target(page):
   if redir == True:
       cible = page.getRedirectTarget()
   return cible
+
+#### Fonction interne LIST() SUPPRIMER
+##   reçoit un générateur PWB retourne une liste Python
+##   le nom doit être le même des 2 coté de l'egalité ex: myname=gen_to_list(myname)
+#def gen_to_list(gen_name):
+  #list_name = []
+  #for g in gen_name:
+    #list_name.append(g)
+  #return list_name
