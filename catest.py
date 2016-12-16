@@ -62,7 +62,6 @@ for p in dict_root_sub: # A VERIFIER bcp de code
 
 table_prop_code = wlms_table_prop(ns_id, nsdata) # Écrit la table Lua des propriétés de l'espace de noms
 table_pages_code = wlms_table(dict_page, 'pages')   # Écrit la table Lua des pages de l'espace de noms
-# ATTENTION wlms_table_pages 
 # Concatener le code Lua ici
 lua_code = table_prop_code + table_pages_code    # Concatener le code Lua
 

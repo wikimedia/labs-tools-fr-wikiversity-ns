@@ -52,12 +52,12 @@ nsdata = ns_collect_data(ns_id)    # Scan l'espace de noms VERSION 2
 dict_page = nsdata['dict_page']    # retourne le dictionnaire des pages
 dict_page = chk_lnk_dpt(dict_page) # Ajoute la liste de liens pour les departements
 ### Write data
-table_prop_code = wlms_table_prop(ns_id, nsdata) # Écrit la table Lua des propriétés de l'espace de noms
-table_pages_code = wlms_table_pages(dict_page)   # Écrit la table Lua des pages de l'espace de noms
-dpt_fac= tupleinvert()                           # Inverse le dictionnaire
-table_dpt_code = wlms_table(dpt_fac,'dpt_fac')   # Écrit la table spécifique de contrôle des départements
+table_prop_code = wlms_table_prop(ns_id, nsdata)  # Écrit la table Lua des propriétés de l'espace de noms
+table_pages_code = wlms_table(dict_page, 'pages') # Écrit la table Lua des pages de l'espace de noms
+dpt_fac= tupleinvert()                            # Inverse le dictionnaire
+table_dpt_code = wlms_table(dpt_fac,'dpt_fac')    # Écrit la table inverse pour contrôle des départements
 ### Concatener le code Lua ici
-lua_code = table_prop_code + table_pages_code + table_dpt_code # Concatener le code Lua
+lua_code = table_prop_code + table_pages_code + table_dpt_code  # Concatener le code Lua
 ### Save Data
 module_name = u'ns_' + nsdata['label']  # enregistre le module du namespace
 #print lua_code                         # TEST affiche le code du module

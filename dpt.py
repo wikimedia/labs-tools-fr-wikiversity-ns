@@ -62,7 +62,6 @@ for p in dict_root_sub: # A VERIFIER bcp de code
 
 table_prop_code = wlms_table_prop(ns_id, nsdata) # Écrit la table Lua des propriétés de l'espace de noms
 table_pages_code = wlms_table(dict_page, 'pages')   # Écrit la table Lua des pages de l'espace de noms
-# ATTENTION wlms_table_pages 
 # Concatener le code Lua ici
 lua_code = table_prop_code + table_pages_code    # Concatener le code Lua
 
@@ -70,18 +69,3 @@ module_name = u'ns_' + nsdata['label']  # enregistre le module du namespace
 #print lua_code                         # TEST affiche le code du module
 write_module_lua(module_name, lua_code) # Ecriture du module #TEST 
 
-#### CHK SUB FOR LNK --- AMELIORER
-##   Cherche les liens dans les sous-pages 
-##   /Leçons par thèmes & niveaux
-## AJOUTER argument pour l'espace de destination (0 principal, 104 Rch)
-#def check_lessons_in_sp(page, string, nsid): # string contient le nom de la sous-page
-  #sp = str(page)               # Convertit en string
-  #sp = sp[2:-2] + string       # ajoute les crochets
-  #title = unicode(sp, 'utf-8') # Convertit en unicode
-  #page = pywikibot.Page(site, title) # Créé un objet page PWB 
-  #exist = page.exists()              # Test si la page existe
-  #if exist:
-    #gen = get_linked_p(page, nsid) # titre de la page et namespace id RECUPERER le numero en argument
-  #else: # La page n'existe pas!
-    #gen = [] #???
-  #return gen # retourner une LISTE de préférence
