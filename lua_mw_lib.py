@@ -76,6 +76,7 @@ def wlms_table_prop(ns_id, nsdata): #
 
 ###DOUBLE EMPLOI avec wlms_table(python_dict, table_name)
 #  REMPLACER PAR wlms_table(dict_page, 'pages') -> hlp, cat
+# ATTENTION OFF
 def wlms_table_pages(dict_page): 
   t = 'p.t_pages = {\n'  # placer la chaine dans une variable
   for page in dict_page: # pour chaque page
