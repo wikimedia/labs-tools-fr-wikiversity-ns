@@ -1,71 +1,76 @@
 #!/usr/bin/env python
 # -*- coding: utf-8  -*-
-### Outil d'analyse et report de données sur l'espace de noms numero 108 - Département - Départementt
+### Outil d'analyse et report de données sur l'espace de noms numero 104 Recherche
 ### Licence CeCiLL voir Licence.txt
-import pywikibot ###, re, sys
 from namespace_lib import *
 from lua_mw_lib import *
+import pywikibot 
 
 lang = 'fr'       
 family = 'wikiversity'
 site = pywikibot.Site(lang, family)  
-ns_id = 108  # NAMESPACE ID
+ns_id = 104   
+
+### FONCTIONS NS 104
+
+### Liste des documents de recherche liés dans la sous-page "/Contenu"
+#   Charger la liste des pages à analyser via celle des articles dans la catégorie Laboratoire de recherche
+def find_content(page): # reçoit un objet page retourne l'objet sous-page/Contenu
+  spage = str(page)
+  content = spage[2:-2] + '/Contenu'
+  title = unicode(content, 'utf-8')
+  page = pywikibot.Page(site, title)
+  return page
+  
+def rch_labo():
+  category_title = u'fr:Catégorie:Laboratoire de recherche' # à partir de la catégorie
+  page = pywikibot.page.Category(site, category_title)      # créé la l'objet page.cat PWB
+  articles = page.articles()       # collecte liste des articles de la catégorie
+  articles = list(articles) # MIEUX : articles = list(articles)
+  for article in articles:  # chaque article de la catégorie
+    page = find_content(article) # objet page pour la sous-page Contenu
+    exist = page.exists()        # test si trouve /Contenu
+    if exist: 
+      gen = get_linked_p(page, 104) # collecte les liens sur cette page vers ns Recherche
+      l_gen = list(gen)        # MIEUX convertit le gen en liste
+      for mypage in dict_page: # 
+	if mypage == article:
+	  page_prop = dict_page[mypage]
+	  page_prop['l_doc'] = l_gen   # place la liste dans le dictionnaire des propriétés
+	  page_prop['class_doc'] = '\'lab\'' # NOUVELLE VARIABLE
+      # ATTENTION les liens sont sur la sous-page /Contenu mais nous les affectons aux propriétés
+      # de la page du departement (page supérieure ou racine)
+  return dict_page
 
 ### ETAPE 1 
-nsdata = ns_collect_data(ns_id) # Scan l'espace de noms VERSION 2
-dict_page = nsdata['dict_page'] # récupère le dictionnaire des pages
+nsdata = ns_collect_data(ns_id)           # Scan l'espace de noms VERSION 2
+dict_page = nsdata['dict_page']
 
-### Determine le nombre de liens par themes par niveaux
-#   Verifie si la page existe le nombre de leçons
-#   Ajoute un dictionnaire d_lesson contenant les listes : 
-#   l_theme, l_niveaux, l_add, all_lessons, l_exist
-merged = merge_sub2(dict_page)    # merge_sub2 RENOMMER
-dict_root_sub = root_sub2(merged) # Ajoute la liste des sous-pages aux propriétés des pages racines
-for p in dict_root_sub: # A VERIFIER bcp de code
-  d_lesson = {}                     # Initialise un dictionnaire pour les stats sur les leçons
-  page_prop = dict_root_sub[p]      # p
-  [niveau, date1, cible, lsp] = page_prop #??? VERIFIER 
-  theme = check_link_in_subpage(p, '/Leçons par thèmes', 0)
-  niveau = check_link_in_subpage(p, '/Leçons par niveaux', 0)
-  rch_out = check_link_in_subpage(p, '/Leçons par thèmes', 104)
-  l_rch   = check_link_in_subpage(p, '/Travaux de recherche', 104)
-  f_niveau = []          # pour filtrer les doublons qui ne sont pas déjà dans la sous-page Leçons par thèmes
-  for lesson in niveau:  # de la sous-page Leçons par niveaux
-    if lesson in theme:  # 
-      pass
-    else:
-      f_niveau.append(lesson)   # ajoute la lesson à la liste filtrée
-  all_lessons = theme + f_niveau
-  lesson_exist = []        # Liste des liens dont la page existe
-  for page in all_lessons:
-    exist = page.exists()       # Si la page existe
+
+### Ajoute la liste des doc de recherche au dictionnaire des pages
+#   Filtre les departements de recherche
+### Collecte les liens vers ns_104 retourne la liste l_doc
+for page in dict_page:  # Analyse des départements de recherche
+  page_prop = dict_page[page]
+  prefix = "fr:Recherche:Département:" # prefix des departement de recherche
+  s = str(page)
+  if prefix in s and page_prop['nsep'] == 0: # si departement de recherche
+    subp = find_content(page) # Objet pour la sous-page "/Contenu"
+    exist = subp.exists()     # test si trouve /Contenu
     if exist:
-      lesson_exist.append(page) # place le lien dans la liste
-    else:
-      pass
-  d_lesson['l_theme']  = theme          # les stats des leçons dans un dictionnaire
-  d_lesson['n_theme']  = len(theme)
-  d_lesson['l_niveau'] = niveau
-  d_lesson['n_niveau'] = len(niveau)
-  d_lesson['l_add']    = f_niveau	# Liste liens Uniquement depuis Leçons par niveaux
-  d_lesson['n_add']    = len(f_niveau)	# Nombre de liens Uniquement depuis Leçons par niveaux
-  d_lesson['all_lessons'] = all_lessons # ajoute la liste des leçons fusionnée RENOMMER l_lessons
-  d_lesson['n_lessons'] = len(all_lessons)
-  d_lesson['l_exist']   = lesson_exist	# Liste des liens vers espace principal
-  d_lesson['n_exist']   = len(lesson_exist)
-  d_lesson['rch_out']   = rch_out	# Liste des liens recherche mal placés
-  d_lesson['n_rch_out']	= len(rch_out)
-  d_lesson['l_rch']     = l_rch		# Liste des liens vers travaux de recherche
-  d_lesson['n_rch']	= len(l_rch)    # Ajout du nombre de travaux de recherche
-  page_prop['d_lesson'] = d_lesson      # Ajout du dictionnaire des leçons RENOMMER D_LINKS
-  dict_root_sub[p]      = page_prop     # Actualise les propriétes de la page???
+      gen = get_linked_p(subp, 104) # titre de la page et namespace id
+      l_gen = list(gen)
+      page_prop['class_doc'] = '\'dptr\'' # NOUVELLE VARIABLE
+      page_prop['l_doc'] = l_gen            # place la liste dans le dictionnaire des propriétés
+  #ATTENTION les liens sont sur la sous-page /Contenu 
 
-table_prop_code = wlms_table_prop(ns_id, nsdata) # Écrit la table Lua des propriétés de l'espace de noms
-table_pages_code = wlms_table(dict_page, 'pages')   # Écrit la table Lua des pages de l'espace de noms
+dict_page = rch_labo()
+
+table_prop_code = wlms_table_prop(ns_id, nsdata)  # la table des propriétés de l'espace de noms
+table_pages_code = wlms_table(dict_page, 'pages') # TEST wlms_table() 
 # Concatener le code Lua ici
-lua_code = table_prop_code + table_pages_code    # Concatener le code Lua
+lua_code = table_prop_code + table_pages_code  # Concatener le code Lua
 
 module_name = u'ns_' + nsdata['label']  # enregistre le module du namespace
 #print lua_code                         # TEST affiche le code du module
 write_module_lua(module_name, lua_code) # Ecriture du module #TEST 
-
