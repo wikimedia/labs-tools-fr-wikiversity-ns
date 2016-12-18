@@ -19,8 +19,8 @@ def check_link_in_subpage(page, sub, nsid): # sub contient le nom de la sous-pag
   title = title[2:-2] + sub          # ajoute les crochets
   title = unicode(title, 'utf-8')    # Convertit en unicode
   page = pywikibot.Page(site, title) # Créé un objet page PWB 
-  exist = page.exists()              # Test si la page existe
   links = [] # il faut une liste même vide pour certains calculs
+  exist = page.exists()              # Test si la page existe
   if exist:
     links = get_linked_p(page, nsid) # titre de la page et namespace id RECUPERER le numero en argument
     links = list(links)              # convertit le générateur en liste python

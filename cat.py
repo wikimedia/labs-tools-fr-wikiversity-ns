@@ -6,7 +6,6 @@ import pywikibot
 from namespace_lib import *
 from lua_mw_lib import *
 
-
 def get_linked_cat(collector_file):  # Reçoit le titre du formulaire d'inscription
   title = collector_file
   page = pywikibot.Page(site, title) # objet page  PWB
@@ -65,7 +64,6 @@ def cat_eponyme(cat_title) :
     if exist:
       l_rcat.append(page)			# Ajoute la catégorie éponyme à la liste
   return l_rcat
-
 
 lang = 'fr'       
 family = 'wikiversity'

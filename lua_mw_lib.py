@@ -11,18 +11,26 @@ site = pywikibot.Site(lang, family)
 wmls_table_close = '}\n' # ferme la table principale
 wmls_table_next = '},\n' # ferme une sous-table item suivant attendu
 
-### write_lua_module() écrit un module vide
-#
+### write_lua_module(nom, code) écrit un module vide avec la variable "p"
+#   reçoit la partie courte du nom et le code à inserer
 def write_module_lua(module_name, lua_code): # Compiler tout le code du module au préalabe
+  import __main__ # Pour obtenir le nom du script principal (pas celui de la librairie)
   title = u'Module:' # UNICODE
   title = title + module_name
-  comment = u'Nouveau module ajouté par l\'outil fr-wikiversity-ns sur tools.labs.org'
+  comment = u'Module actualisé par : ' + __main__.__file__ + ' ; [[Utilisateur:Youni Verciti]].'
   module = 'local p = {}\n'
   module = module + lua_code
   module = module + '\nreturn p'
   page = pywikibot.Page(site, title)
   page.text = module
-  page.save(comment) # TRY
+  #exist = page.exists()  # Test si la page existe (Empêche page.save de réécrire le module
+  #if exist:
+    #comment = u'Module actualisé par : ' + __main__.__file__ 
+    ##page.save(comment)
+  #else:
+    #comment = u'Nouveau module créé par :' + __main__.__file__
+  #print comment
+  page.save(comment)
 
 ### wlms_table(python_dict, table_name)
 #   reçoit le dictionnaire et le nom de la table en argument
