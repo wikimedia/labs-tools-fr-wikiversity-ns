@@ -17,7 +17,7 @@ def write_module_lua(module_name, lua_code): # Compiler tout le code du module a
   import __main__ # Pour obtenir le nom du script principal (pas celui de la librairie)
   title = u'Module:' # UNICODE
   title = title + module_name
-  comment = u'Module actualisé par : ' + __main__.__file__ + ' ; [[Utilisateur:Youni Verciti]].'
+  comment = u'Module actualisé par : ' + __main__.__file__ + ' ; [[Utilisateur:Youni Verciti|Youni Verciti]].'
   module = 'local p = {}\n'
   module = module + lua_code
   module = module + '\nreturn p'

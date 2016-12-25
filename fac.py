@@ -12,7 +12,6 @@ import pywikibot
 def chk_lnk_dpt(dict_page) :
   for page in dict_page:
     page_prop = dict_page[page]
-    # count_dpt = 0  # n_dpt calcul le nombre de départements pour la faculté
     if page_prop['nsep'] == 0 :         # ATTENTION tjrs les racines nb_sep = 0 donc page racine 
       ldpt = check_link_in_subpage(page, '/Départements', 108) # BUG corrigé :ventilation des départements
       page_prop['ldpt'] = ldpt        # ajoute listes departement aux propriétés de la faculté L_DPT   

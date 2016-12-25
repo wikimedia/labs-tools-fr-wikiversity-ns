@@ -90,22 +90,19 @@ def prefix(p, lang, label): # DOCUMENTER AMELIORER
   prefixed = lang + ':' + label + ':' + p
   return prefixed
 
-### Scinde les pages racine et sous pages
-#   lit le dictionnaire des pages analyse le nombre de separateurs
-def merge_sub2(mydict): # RENOMMER
-  dict_racine = {}       # Dictionnaire des pages racines
-  dict_sub = {}          # Dictionnaire des sous-pages
-  for page in mydict:
-    page_prop = mydict[page]
-    nsep = page_prop['nsep']
-    if nsep == 0:
-      dict_racine[page] = page_prop
-    else:
-      dict_sub[page] = page_prop
-  merged = [dict_racine, dict_sub]  # LISTE reçoit les deux dictionnaires précedents
-  return merged
+def get_linked_p(source_p, ns):              # collecte les pages liées vers ns sur la page source
+  gen = source_p.linkedPages(namespaces=ns)  # génère la liste des dpt à patir de la page fac
+  return gen                                 # retourne le générateur
 
-### Traite les pages racines
+def get_target(page):
+  redir = page.isRedirectPage()
+  cible = ''
+  if redir == True:
+      cible = page.getRedirectTarget()
+  return cible
+
+### AMELIORER spécifique lsp l_sp/n_sp pas collecté pour les facultés
+### UNIQUEMENT POUR DPT:PY
 #   Ajoute la liste des sous-pages aux propriétés des pages racines
 def root_sub2(merged):             # Reçoit la liste merged
   [dict_racine, dict_sub] = merged # Extrait les dictionnaires 
@@ -122,23 +119,20 @@ def root_sub2(merged):             # Reçoit la liste merged
     page_prop['lsp'] = list_sub    # ajoute la liste des sous-pages aux propriétés
     dict_root_sub[racine] = page_prop  # ajoutes les propriétés à la page racine
   return dict_root_sub             # Retourne le dictionnaire root/sub
+### MODIFIER voir dpt.py
+#   Scinde les pages racine et sous pages
+#   lit le dictionnaire des pages analyse le nombre de separateurs
+def merge_sub2(mydict): # RENOMMER SPLIT(ns_dict, |sub)
+  dict_racine = {}      # Dictionnaire des pages racines
+  dict_sub = {}         # Dictionnaire des sous-pages
+  for page in mydict:
+    page_prop = mydict[page]
+    nsep = page_prop['nsep'] # Vérifier
+    if nsep == 0:
+      dict_racine[page] = page_prop
+    else:
+      dict_sub[page] = page_prop
+  # Retourner root par defaut ou sub si option=sub
+  merged = [dict_racine, dict_sub]  # LISTE reçoit les deux dictionnaires précedents
+  return merged # retourner 
 
-def get_linked_p(source_p, ns):              # collecte les pages liées vers ns sur la page source
-  gen = source_p.linkedPages(namespaces=ns)  # génère la liste des dpt à patir de la page fac
-  return gen                                 # retourne le générateur
-
-def get_target(page):
-  redir = page.isRedirectPage()
-  cible = ''
-  if redir == True:
-      cible = page.getRedirectTarget()
-  return cible
-
-#### Fonction interne LIST() SUPPRIMER
-##   reçoit un générateur PWB retourne une liste Python
-##   le nom doit être le même des 2 coté de l'egalité ex: myname=gen_to_list(myname)
-#def gen_to_list(gen_name):
-  #list_name = []
-  #for g in gen_name:
-    #list_name.append(g)
-  #return list_name

@@ -20,7 +20,10 @@ dict_page = nsdata['dict_page'] # récupère le dictionnaire des pages
 #   Ajoute un dictionnaire d_lesson contenant les listes : 
 #   l_theme, l_niveaux, l_add, all_lessons, l_exist
 merged = merge_sub2(dict_page)    # merge_sub2 RENOMMER
+
+# POURQUOI UNIQUEMENT ICI ?
 dict_root_sub = root_sub2(merged) # Ajoute la liste des sous-pages aux propriétés des pages racines
+
 for p in dict_root_sub: # A VERIFIER bcp de code
   d_lesson = {}                     # Initialise un dictionnaire pour les stats sur les leçons
   page_prop = dict_root_sub[p]      # p
