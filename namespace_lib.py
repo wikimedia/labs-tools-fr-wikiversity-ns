@@ -104,8 +104,8 @@ def get_target(page):
 ### AMELIORER spécifique lsp l_sp/n_sp pas collecté pour les facultés
 ### UNIQUEMENT POUR DPT:PY
 #   Ajoute la liste des sous-pages aux propriétés des pages racines
-def root_sub2(merged):             # Reçoit la liste merged
-  [dict_racine, dict_sub] = merged # Extrait les dictionnaires 
+def get_sub_list(splited_dicts):          # Reçoit les dictionnaires root et sub
+  [dict_racine, dict_sub] = splited_dicts # Extrait les dictionnaires 
   dict_root_sub = {}               # Initialise root/sub dict
   for racine in dict_racine:       # Pour chaque page du dictionnaire racine
     page_prop = dict_racine[racine]# Extrait les propriétés
@@ -119,20 +119,21 @@ def root_sub2(merged):             # Reçoit la liste merged
     page_prop['lsp'] = list_sub    # ajoute la liste des sous-pages aux propriétés
     dict_root_sub[racine] = page_prop  # ajoutes les propriétés à la page racine
   return dict_root_sub             # Retourne le dictionnaire root/sub
+
 ### MODIFIER voir dpt.py
 #   Scinde les pages racine et sous pages
 #   lit le dictionnaire des pages analyse le nombre de separateurs
-def merge_sub2(mydict): # RENOMMER SPLIT(ns_dict, |sub)
+def split_root(mydict): # RENOMMER SPLIT_ROOT(ns_dict, |sub)
   dict_racine = {}      # Dictionnaire des pages racines
   dict_sub = {}         # Dictionnaire des sous-pages
-  for page in mydict:
-    page_prop = mydict[page]
-    nsep = page_prop['nsep'] # Vérifier
-    if nsep == 0:
+  for page in mydict:   # Pour chaque page
+    page_prop = mydict[page] # Déclare les propriétés de la page
+    # nsep = page_prop['nsep'] # Vérifier
+    if page_prop['nsep'] == 0:
       dict_racine[page] = page_prop
     else:
       dict_sub[page] = page_prop
   # Retourner root par defaut ou sub si option=sub
-  merged = [dict_racine, dict_sub]  # LISTE reçoit les deux dictionnaires précedents
-  return merged # retourner 
+  splited_dicts = [dict_racine, dict_sub]  # LISTE reçoit les deux dictionnaires précedents
+  return splited_dicts # retourner 
 

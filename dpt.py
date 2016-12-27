@@ -9,20 +9,25 @@ from lua_mw_lib import *
 lang = 'fr'       
 family = 'wikiversity'
 site = pywikibot.Site(lang, family)  
-ns_id = 108  # NAMESPACE ID
+ns_id = 108            # NAMESPACE ID
+ns_talk_id = ns_id + 1 # Identifiant espace de discussion relatif
 
-### ETAPE 1 
+### Collecte données  
 nsdata = ns_collect_data(ns_id) # Scan l'espace de noms VERSION 2
 dict_page = nsdata['dict_page'] # récupère le dictionnaire des pages
+#   Espace discussion
+nstalk = ns_collect_data(ns_talk_id)  # Scan l'espace de discussion
+talk_dict = nstalk['dict_page']       # Dictionnaire des pages de discussion
 
 # POURQUOI UNIQUEMENT ICI ? Liste des sous-pages pour les départements 'lsp'
-merged = merge_sub2(dict_page)    # merge_sub2 RENOMMER
-dict_root_sub = root_sub2(merged) # Ajoute la liste des sous-pages aux propriétés des pages racines
+splited_dicts = split_root(dict_page)       # Ajouter option split_root(dict_pages, opt[,|sub|both])
+dict_root_sub = get_sub_list(splited_dicts) # Ajoute la liste des sous-pages aux propriétés des pages racines
 
 ### Determine le nombre de liens par themes par niveaux
 #   Verifie si la page existe le nombre de leçons
 #   Ajoute un dictionnaire d_lesson contenant les listes : 
 #   l_theme, l_niveaux, l_add, all_lessons, l_exist
+
 for p in dict_root_sub: # A VERIFIER bcp de code
   d_lesson = {}                     # Initialise un dictionnaire pour les stats sur les leçons
   page_prop = dict_root_sub[p]      # p
@@ -40,7 +45,7 @@ for p in dict_root_sub: # A VERIFIER bcp de code
   all_lessons = theme + f_niveau # La somme des liens apres fiiltrage doublons
   lesson_exist = []              # Liste des liens dont la page existe après test
   for page in all_lessons:
-    exist = page.exists()       # Si la page existe
+    exist = page.exists()        # Si la page existe
     if exist:
       lesson_exist.append(page) # place le lien dans la liste
     else:
@@ -62,11 +67,16 @@ for p in dict_root_sub: # A VERIFIER bcp de code
   page_prop['d_lesson'] = d_lesson      # Ajout du dictionnaire des leçons RENOMMER D_LINKS
   dict_root_sub[p]      = page_prop     # Actualise les propriétes de la page???
 
-table_prop_code = wlms_table_prop(ns_id, nsdata) # Écrit la table Lua des propriétés de l'espace de noms
-table_pages_code = wlms_table(dict_page, 'pages')   # Écrit la table Lua des pages de l'espace de noms
-# Concatener le code Lua ici
-lua_code = table_prop_code + table_pages_code    # Concatener le code Lua
-
-module_name = u'ns_' + nsdata['label']  # enregistre le module du namespace
-#print lua_code                         # TEST affiche le code du module
-write_module_lua(module_name, lua_code) # Ecriture du module #TEST 
+table_prop_code = wlms_table_prop(ns_id, nsdata)  # Écrit la table Lua des propriétés de l'espace de noms
+table_pages_code = wlms_table(dict_page, 'pages') # Écrit la table Lua des pages de l'espace de noms
+lua_code = table_prop_code + table_pages_code     # Concatener le code Lua
+module_name = u'ns_' + nsdata['label']            # enregistre le module du namespace
+#   Talk tables
+talk_prop_code   = wlms_table_prop(ns_id, nstalk)     # la table des propriétés de l'espace discussion
+talk_pages_code  = wlms_table(talk_dict, 'talkpages') # la table des pages de discussion
+lua_talk_code    = talk_prop_code + talk_pages_code   # Concatener le code Lua
+talk_module_name = u'ns_' + nstalk['label']           # enregistre le module de l'espace discussion relatif
+### Sauvegarde des modules
+write_module_lua(module_name, lua_code)           # Ecriture du module #TEST 
+write_module_lua(talk_module_name, lua_talk_code) # Ecriture des tables de l'espace discussion
+#print lua_code                                   # TEST affiche le code du module
