@@ -15,21 +15,20 @@ ns_id = 108  # NAMESPACE ID
 nsdata = ns_collect_data(ns_id) # Scan l'espace de noms VERSION 2
 dict_page = nsdata['dict_page'] # récupère le dictionnaire des pages
 
+# POURQUOI UNIQUEMENT ICI ? Liste des sous-pages pour les départements 'lsp'
+merged = merge_sub2(dict_page)    # merge_sub2 RENOMMER
+dict_root_sub = root_sub2(merged) # Ajoute la liste des sous-pages aux propriétés des pages racines
+
 ### Determine le nombre de liens par themes par niveaux
 #   Verifie si la page existe le nombre de leçons
 #   Ajoute un dictionnaire d_lesson contenant les listes : 
 #   l_theme, l_niveaux, l_add, all_lessons, l_exist
-merged = merge_sub2(dict_page)    # merge_sub2 RENOMMER
-
-# POURQUOI UNIQUEMENT ICI ?
-dict_root_sub = root_sub2(merged) # Ajoute la liste des sous-pages aux propriétés des pages racines
-
 for p in dict_root_sub: # A VERIFIER bcp de code
   d_lesson = {}                     # Initialise un dictionnaire pour les stats sur les leçons
   page_prop = dict_root_sub[p]      # p
   [niveau, date1, cible, lsp] = page_prop #??? VERIFIER 
-  theme = check_link_in_subpage(p, '/Leçons par thèmes', 0)
-  niveau = check_link_in_subpage(p, '/Leçons par niveaux', 0)
+  theme   = check_link_in_subpage(p, '/Leçons par thèmes', 0)
+  niveau  = check_link_in_subpage(p, '/Leçons par niveaux', 0)
   rch_out = check_link_in_subpage(p, '/Leçons par thèmes', 104)
   l_rch   = check_link_in_subpage(p, '/Travaux de recherche', 104)
   f_niveau = []          # pour filtrer les doublons qui ne sont pas déjà dans la sous-page Leçons par thèmes
@@ -37,9 +36,9 @@ for p in dict_root_sub: # A VERIFIER bcp de code
     if lesson in theme:  # 
       pass
     else:
-      f_niveau.append(lesson)   # ajoute la lesson à la liste filtrée
-  all_lessons = theme + f_niveau
-  lesson_exist = []        # Liste des liens dont la page existe
+      f_niveau.append(lesson)    # ajoute la lesson à la liste filtrée
+  all_lessons = theme + f_niveau # La somme des liens apres fiiltrage doublons
+  lesson_exist = []              # Liste des liens dont la page existe après test
   for page in all_lessons:
     exist = page.exists()       # Si la page existe
     if exist:
@@ -71,4 +70,3 @@ lua_code = table_prop_code + table_pages_code    # Concatener le code Lua
 module_name = u'ns_' + nsdata['label']  # enregistre le module du namespace
 #print lua_code                         # TEST affiche le code du module
 write_module_lua(module_name, lua_code) # Ecriture du module #TEST 
-

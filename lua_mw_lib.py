@@ -74,18 +74,6 @@ def wmls_table_input(page_prop):
       t = t + str(prop) + ' = ' + str(page_prop[prop]) + ', '  # formate k, v
   t = t + wmls_table_next  # ferme la table ajoute une virgule
   return t
-####DOUBLE EMPLOI avec wlms_table(python_dict, table_name)
-##  REMPLACER PAR wlms_table(dict_page, 'pages') -> hlp, cat
-## ATTENTION OFF
-#def wlms_table_pages(dict_page): 
-  #t = 'p.t_pages = {\n'  # placer la chaine dans une variable
-  #for page in dict_page: # pour chaque page
-    #t = t + '{page = ' + str(page) + ', ' # compile clé et valeur
-    #page_prop = dict_page[page]           # le dictionnaire des proriétés de la page
-    #t = t + wmls_table_input(page_prop)   # comple le code Lua des propriétés
-  #t = t + wmls_table_close                # fin de table
-  #t = unicode(t, 'utf_8')                 # UNICODE
-  #return t
 
 ### Construit la table Lua t_prop des propriétés de l'espce de noms
 #   exclu le dictionnaire des pages
@@ -113,3 +101,16 @@ def wmls_list_to_lua2(l): # convertit une liste python en table Lua
     code = code + str(i) + ', '   # ipairs liste items sans clé
   code = code + '} \n'           # ferme la table + saut de ligne (SANS VIRGULE FINALE)
   return code                     # retourne le code Lua
+
+####DOUBLE EMPLOI avec wlms_table(python_dict, table_name)
+##  REMPLACER PAR wlms_table(dict_page, 'pages') -> hlp, cat
+## ATTENTION OFF
+#def wlms_table_pages(dict_page): 
+  #t = 'p.t_pages = {\n'  # placer la chaine dans une variable
+  #for page in dict_page: # pour chaque page
+    #t = t + '{page = ' + str(page) + ', ' # compile clé et valeur
+    #page_prop = dict_page[page]           # le dictionnaire des proriétés de la page
+    #t = t + wmls_table_input(page_prop)   # comple le code Lua des propriétés
+  #t = t + wmls_table_close                # fin de table
+  #t = unicode(t, 'utf_8')                 # UNICODE
+  #return t

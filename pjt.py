@@ -9,20 +9,31 @@ import pywikibot
 lang = 'fr'       
 family = 'wikiversity'
 site = pywikibot.Site(lang, family)  
-ns_id = 102   
+ns_id = 102  
+ns_talk_id = ns_id + 1 # Identifiant espace de discussion relatif
 
 ### Collect data
 nsdata = ns_collect_data(ns_id) # Scan l'espace de noms
 dict_page = nsdata['dict_page'] # récupère le dictionnaire des pages
+#   Talk space
+nstalk = ns_collect_data(ns_talk_id)  # Scan l'espace de discussion
+talk_dict = nstalk['dict_page']       # Dictionnaire des pages de discussion
+
 # VERIFIER prefixe ou regex suivant :
 prefix_list = [u'Wikiversité',] # Liste UNICODE des pages dont on souhaite collecter les dates
-ns_get_date(dict_page, prefix_list, nsdata['label']) # Collecte les dates de 1ere revisio
+ns_get_date(dict_page, prefix_list, nsdata['label']) # Collecte les dates de 1ere revision
+
 ### Write Lua table  
-table_prop_code = wlms_table_prop(ns_id, nsdata) # la table des propriétés de l'espace de noms
-table_pages_code = wlms_table(dict_page, 'pages')   # la table des pages
-# Concatener le code Lua ici
-lua_code = table_prop_code + table_pages_code  # Concatener le code des tables Lua
+table_prop_code = wlms_table_prop(ns_id, nsdata)  # la table des propriétés de l'espace de noms
+table_pages_code = wlms_table(dict_page, 'pages') # la table des pages
+lua_code = table_prop_code + table_pages_code     # Concatener le code des tables Lua
+module_name = u'ns_' + nsdata['label']            # enregistre le module du namespace
+#   Talk tables
+talk_prop_code   = wlms_table_prop(ns_id, nstalk)     # la table des propriétés de l'espace discussion
+talk_pages_code  = wlms_table(talk_dict, 'talkpages') # la table des pages de discussion
+lua_talk_code    = talk_prop_code + talk_pages_code   # Concatener le code Lua
+talk_module_name = u'ns_' + nstalk['label']           # enregistre le module de l'espace discussion relatif
 ### Save Lua module
-module_name = u'ns_' + nsdata['label']  # enregistre le module du namespace
-#print lua_code                         # TEST affiche le code du module
-write_module_lua(module_name, lua_code) # Ecriture du module #TEST 
+write_module_lua(module_name, lua_code)               # Ecriture du module #TEST 
+write_module_lua(talk_module_name, lua_talk_code)     # Ecriture des tables de l'espace discussion
+#print lua_code                                       # TEST affiche le code du module

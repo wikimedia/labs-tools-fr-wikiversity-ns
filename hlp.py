@@ -9,13 +9,13 @@ from lua_mw_lib import *
 lang = 'fr'       
 family = 'wikiversity'
 site = pywikibot.Site(lang, family)  
-ns_id = 12   # identifiant espace de noms Aide
+ns_id = 12             # identifiant espace de noms Aide
+ns_talk_id = ns_id + 1 # Identifiant espace de discussion relatif
 
 ### Collect data MAIN SPACE
 nsdata = ns_collect_data(ns_id)       # Scan l'espace de noms 
 main_dict = nsdata['dict_page']
 ### Collect data DISCUSSIONS NAMESPACES
-ns_talk_id = ns_id + 1 # Identifiant espace de discussion relatif
 nstalk = ns_collect_data(ns_talk_id)  # Scan l'espace de discussion
 talk_dict = nstalk['dict_page']       # Dictionnaire des pages de discussion
 
