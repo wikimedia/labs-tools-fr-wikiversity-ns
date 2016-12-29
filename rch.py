@@ -27,10 +27,14 @@ lang = 'fr'
 family = 'wikiversity'
 site = pywikibot.Site(lang, family)  
 ns_id = 104   
+ns_talk_id = ns_id + 1 # Identifiant de l'espace de discussion
 
 ### ETAPE 1 
 nsdata = ns_collect_data(ns_id)  # Scan l'espace de noms 
 dict_page = nsdata['dict_page']
+### Collect data DISCUSSIONS NAMESPACES
+nstalk = ns_collect_data(ns_talk_id)  # Scan l'espace de discussion
+talk_dict = nstalk['dict_page']       # Dictionnaire des pages de discussion 
 
 ### Ajoute la liste et le nombre de documents de recherche au dictionnaire des pages
 ### Filtre les departements de recherche Collecte les liens vers ns_104 
@@ -50,14 +54,19 @@ for page in dict_page:  # Analyse des départements de recherche
 
 dict_page = rch_labo() # ATTENTION liens sur la sous-page /Contenu affectés aux propriétés de la page supérieure ou racine.
 
+### Ecritures des tables lua
 table_prop_code = wlms_table_prop(ns_id, nsdata)  # la table des propriétés de l'espace de noms
 table_pages_code = wlms_table(dict_page, 'pages') # TEST wlms_table() 
-# Concatener le code Lua ici
-lua_code = table_prop_code + table_pages_code  # Concatener le code Lua
-
-module_name = u'ns_' + nsdata['label']  # enregistre le module du namespace
+lua_code = table_prop_code + table_pages_code     # Concatener le code Lua
+module_name = u'ns_' + nsdata['label']            # enregistre le module du namespace
+#   Talk tables
+talk_prop_code   = wlms_table_prop(ns_id, nstalk)     # la table des propriétés de l'espace discussion
+talk_pages_code  = wlms_table(talk_dict, 'talkpages') # la table des pages de discussion
+lua_talk_code    = talk_prop_code + talk_pages_code   # Concatener le code des tables
+talk_module_name = u'ns_' + nstalk['label']  # Nom du module pour l'espace discussion relatif
 #   Write modules
 write_module_lua(module_name, lua_code) # Ecriture du module #TEST 
+write_module_lua(talk_module_name, lua_talk_code) # Ecriture des tables de l'espace discussion
 #print lua_code                         # TEST affiche le code du module
 
 ### DOUBLE EMPLOI CHK_LINK_IN_SUBPAGE
