@@ -52,7 +52,8 @@ def ns_collect_data(ns_id):
   resep = re.compile('/')     # Regex pour le separateur de sous-pages
   dict_page = {}              # Initialise le dictionnaire principal des pages
   for page in allpages:       # Traitement de chaque page du generateur
-    cible = '\'non\''             # Initialise valeur pour cible de redirection
+    #cible = '\'non\''             # Initialise valeur pour cible de redirection
+    cible = '' #MAJ
     nb_sep = 0                    # Initialise le nombre de separateur pour la page
     #page_prop = {}                
     total=total+1                 # Compteur de page
