@@ -31,7 +31,7 @@ dict_root_sub = get_sub_list(splited_dicts) # Ajoute la liste des sous-pages aux
 for p in dict_root_sub: # A VERIFIER bcp de code
   d_lesson = {}                     # Initialise un dictionnaire pour les stats sur les leçons
   page_prop = dict_root_sub[p]      # p
-  [niveau, date1, cible, l_sub] = page_prop #??? VERIFIER 
+  [niveau, date1, cible, l_sub, n_sub] = page_prop #??? VERIFIER 
   theme   = check_link_in_subpage(p, '/Leçons par thèmes', 0)
   niveau  = check_link_in_subpage(p, '/Leçons par niveaux', 0)
   rch_out = check_link_in_subpage(p, '/Leçons par thèmes', 104)
