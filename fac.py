@@ -23,7 +23,7 @@ def get_link(dict_page, param) : # Filtrer du dictionnaire au préalable !
 
 ### Inverse le dictionnaire des facultés en dictionnaire de departements
 #   Retourne la première liste de départements
-def tupleinvert():
+def tupleinvert(): # AJOUTER n_fac !
   dpt_fac = {}
   for page in dict_page:        # Pour Chaque faculté
     page_prop = dict_page[page] # une liste de parametres
@@ -38,7 +38,9 @@ def tupleinvert():
         else:                               # Le departement est deja dans le tuple inverse
           dpt_params = dpt_fac[departement] # Recupere la liste  
           dpt_params['l_fac'].append(page)  # Ajoute la faculté dans la liste CONTENUE dans le dictionnaire
-        # AJOUTER n_fac ?
+  for dpt in dpt_fac : # AJOUTER n_fac !
+    dpt_params = dpt_fac[dpt]
+    dpt_params['n_fac'] = len(dpt_params['l_fac'])
   return dpt_fac
 
 

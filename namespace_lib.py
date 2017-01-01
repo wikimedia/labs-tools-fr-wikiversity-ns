@@ -117,7 +117,8 @@ def get_sub_list(splited_dicts):          # Reçoit les dictionnaires root et su
       str_sub = str(sub)           # converti en string
       if prefix in str_sub:        # si le prefixe est present
         list_sub.append(sub)       # ajoute la page à la liste
-    page_prop['lsp'] = list_sub    # ajoute la liste des sous-pages aux propriétés
+    page_prop['l_sub'] = list_sub      # ajoute la liste des sous-pages aux propriétés MAJ l_sub = lsp
+    page_prop['n_sub'] = len(list_sub) # ajout nombre de sous-pages MAJ 
     dict_root_sub[racine] = page_prop  # ajoutes les propriétés à la page racine
   return dict_root_sub             # Retourne le dictionnaire root/sub
 

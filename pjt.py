@@ -19,8 +19,6 @@ dict_page = nsdata['dict_page'] # récupère le dictionnaire des pages
 nstalk = ns_collect_data(ns_talk_id)  # Scan l'espace de discussion
 talk_dict = nstalk['dict_page']       # Dictionnaire des pages de discussion
 
-# VERIFIER prefixe ou regex suivant :
-# ATTENTION collecte la date pour toutes les pages contenant Wikiversité
 prefix_list = [u'Projet:Wikiversité',] # Liste UNICODE des pages dont on souhaite collecter les dates
 ns_get_date(dict_page, prefix_list, nsdata['label']) # Collecte les dates de 1ere revision
 
