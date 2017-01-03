@@ -90,6 +90,9 @@ for gen in l_subcats :
   get_members(gen)
 #   COMPTAGE RÉCURSIF 
 #   ATTENTION vérifier le comptage récursif pour Géologie et Géographie
+#gen_cat = get_linked_cat(r_count)
+#for cat in gen_cat :
+  #c_recursive(cat) #
 #   COMPTAGE RÉCURSIF SOUS CATÉGORIES
 lcat = get_linked_cat(r_count_subp)
 all_sub = get_subcats_in(lcat)

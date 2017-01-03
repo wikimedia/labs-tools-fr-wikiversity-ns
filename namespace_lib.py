@@ -15,10 +15,10 @@ site = pywikibot.Site(lang, family)
 #   de destination des liens. Retourne une liste.
 #   (0 principal, 104 Rch, 108 Dpt) fac.py - dpt.py - rch.py
 def check_link_in_subpage(page, sub, nsid): # sub contient le nom de la sous-page
-  title = str(page)               # Convertit en sub
+  title = str(page)                  # Convertit en sub
   title = title[2:-2] + sub          # ajoute les crochets
   title = unicode(title, 'utf-8')    # Convertit en unicode
-  page = pywikibot.Page(site, title) # Créé un objet page PWB 
+  page  = pywikibot.Page(site, title) # Créé un objet page PWB 
   links = [] # il faut une liste même vide pour certains calculs
   exist = page.exists()              # Test si la page existe
   if exist:
