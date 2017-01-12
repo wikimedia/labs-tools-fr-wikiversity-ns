@@ -15,6 +15,13 @@ ns_talk_id = ns_id + 1 # Identifiant espace de discussion relatif
 ### Collecte données espace Wikiversité
 nsdata = ns_collect_data(ns_id)           # Scan l'espace de noms VERSION 2
 dict_page = nsdata['dict_page']
+### PLACER DANS PROJET l_plan est rleatif à une page de l'espace projet !
+#   Projet:Laboratoire/Espaces de noms/Wikiversité/Plan 
+#   Collecter les liens depuis cette page vers ns_4 et retourner la propriété l_plan
+# title = u'Projet:Laboratoire/Espaces de noms/Wikiversité/Plan'
+# page  = pywikibot.Page(site, title) # Créé un objet page PWB
+###
+
 #   Collecte données espace Discussion wikiversité
 nstalk = ns_collect_data(ns_talk_id)      # Scan l'espace de discussion
 talk_dict = nstalk['dict_page']           # Dictionnaire des pages de discussion
