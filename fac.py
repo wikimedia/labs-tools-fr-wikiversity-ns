@@ -63,14 +63,15 @@ table_pages_code = wlms_table(dict_page, 'pages') # Écrit la table Lua des page
 dpt_fac= tupleinvert()                            # Inverse le dictionnaire
 table_dpt_code = wlms_table(dpt_fac,'dpt_fac')    # Écrit la table inverse pour contrôle des départements
 lua_code = table_prop_code + table_pages_code + table_dpt_code  # Concatener le code Lua
-module_name = u'ns_' + nsdata['label'].lower()    # compile le nom du module de l'espace en minuscule
+module_name = u'Nsm/Table/' + str(ns_id)   # compile le nom du module de l'espace en minuscule
 #    Talkspace
 talk_prop_code   = wlms_table_prop(ns_id, nstalk)     # la table des propriétés de l'espace discussion
 talk_pages_code  = wlms_table(talk_dict, 'talkpages') # la table des pages de discussion
 lua_talk_code    = talk_prop_code + talk_pages_code   # Concatener le code Lua
-talk_module_name = u'ns_' + nstalk['label'].lower()   # compile le noms du module en minuscule
+talk_module_name = u'Nsm/Table/' + str(ns_talk_id)   # compile le noms du module en minuscule
 ### Save Data
 write_module_lua(talk_module_name, lua_talk_code)     # Ecriture des tables de l'espace discussion
 write_module_lua(module_name, lua_code) # TEST Ecriture du module
 #print lua_code                         # TEST affiche le code du module
-
+#print module_name
+#print talk_module_name
