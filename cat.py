@@ -107,14 +107,15 @@ for page in l_cat_epo : # Pour chaque catégorie éponyme
 table_prop_code = wlms_table_prop(ns_id, nsdata)  # la table des propriétés de l'espace de noms
 table_pages_code = wlms_table(dict_page, 'pages') # la table des pages
 lua_code = table_prop_code + table_pages_code     # Concatener le code Lua ici
-module_name = u'ns_' + nsdata['label']            # Nom du module
+module_name = u'Nsm/Table/' + str(ns_id)          # Nom du module
 #   Talk tables
 talk_prop_code   = wlms_table_prop(ns_id, nstalk)     # la table des propriétés de l'espace discussion
 talk_pages_code  = wlms_table(talk_dict, 'talkpages') # la table des pages de discussion
 lua_talk_code    = talk_prop_code + talk_pages_code   # Concatener le code des tables
-talk_module_name = u'ns_' + nstalk['label']  # Nom du module pour l'espace discussion relatif
+talk_module_name = u'Nsm/Table/' + str(ns_talk_id)    # Nom du module pour l'espace discussion relatif
 ### Enregistrement des modules
 write_module_lua(module_name, lua_code) # Ecriture du module #TEST 
 write_module_lua(talk_module_name, lua_talk_code) # Ecriture des tables de l'espace discussion
 #print lua_code                         # TEST affiche le code du module
-
+#print module_name
+#print talk_module_name
