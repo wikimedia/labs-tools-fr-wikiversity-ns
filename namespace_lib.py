@@ -10,6 +10,44 @@ family = 'wikiversity'
 site = pywikibot.Site(lang, family) 
 
 
+
+## Determiner si la page est une sous-page documentation sinon determiner si la page dispose d'une documentation
+def is_doc(dict_page) :
+  for page in dict_page :
+    page_prop = dict_page[page] # Chercher si existe variable locale pour '~/Documentation'
+    motif = '/Documentation'    # Pour améliorer il faudrait importer re
+    str_page = str(page)        # mais il reste le cas des documentations
+    s = str_page[:-2]           # avec des noms différents
+    is_doc = False
+    if motif in s :             # mieux vaut s'en tenir au label exact
+      is_doc = True # T majuscule
+    page_prop['is_doc'] = is_doc 
+
+def have_doc(dict_page) : # Determine si la page n'etant pas une documentation, dispose d'une sous-page /Documentation
+  #c = 0 ·Debug
+  motif = u'/Documentation'    # suivi du motif
+  for page in dict_page :   # Itération du dictionnaire
+    #c = c+1 #DEBUG
+    u_page = unicode(page)  # format unicode
+    u_page = u_page[:-2]    # chaine sans les 2 crochets
+    have_doc = False        # déclaration booléen
+    page_prop = dict_page[page] # Déclaration des propriétés de la page
+    #print page_prop['nsep'] #Debug
+    if not page_prop['is_doc'] : # Si la page n'est pas une documentation
+      #print c    #Debug
+      #print page #Debug
+      for doc in dict_page :      # Itération du dictionnaire à la recherche de sp doc
+	u_doc = unicode(doc)      # titre uicode pour page documentation
+	doc_prop = dict_page[doc] # Propriétés de la page documentation
+	if doc_prop['is_doc'] :   # Test si la page est une documentation
+	  if u_page + motif == u_doc[:-2] : # Compare les titres 
+	    #print u_doc #Debug
+	    have_doc = True                 # La page dispose d'une /Documentation
+	    own_doc  = doc                  # stock objet Page de la doc
+    page_prop['have_doc'] = have_doc # Affecte la variable au dictoionnaire
+    if page_prop['have_doc'] :       # Si la page dispose d'une documentation
+      page_prop['own_doc'] = own_doc   # affecte la propriété own_doc
+
 ### Cherche les liens contenus dans la sous-page
 #   Reçoit l'objet page, la chaine de la sous-page et le numero de l'espace de noms 
 #   de destination des liens. Retourne une liste.

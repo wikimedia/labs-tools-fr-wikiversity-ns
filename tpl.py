@@ -16,6 +16,11 @@ ns_talk_id = ns_id + 1
 ### Collect namespace data 
 nsdata = ns_collect_data(ns_id) # Scan l'espace de noms collecte les données
 dict_page = nsdata['dict_page'] # reconnait le dictionnaire des pages
+# Section commune aux espaces Modèle(template) et Module
+is_doc(dict_page)   # Ajoute propriété is_doc (Vrai si est une sous-pages /Documentation) 
+have_doc(dict_page) # Ajoute propriété have_doc, si vrai  ajoute own_doc (titre de la doc associée)
+
+
 ### Collect DISCUSSIONS NAMESPACE data
 nstalk = ns_collect_data(ns_talk_id)  # Scan l'espace de noms VERSION 2
 talk_dict = nstalk['dict_page']       # 
