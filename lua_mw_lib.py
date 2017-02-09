@@ -55,8 +55,12 @@ def wmls_table_input(page_prop):
     if page_prop[prop] == '':  # si la valeur est vide
       pass                     # Ne code pas le paramètre 
     else : # SINON verifie liste, date1, dictionnaire
+      
       if type(page_prop[prop]) == list:
 	t = t + str(prop) + ' = ' + wmls_list_to_lua(page_prop[prop])
+      elif type(page_prop[prop]) == bool : # Si la clé est de type booléen
+	if page_prop[prop] :               # Si le booléen est vrai
+	    t = t + str(prop) + ' = true, '# convertir le booléen Python au format Lua
       elif prop == 'date1': # AMELIORER type int on reconnait la date par le nom du param.
 	t = t + str(prop) + ' = \'' + str(page_prop[prop]) + '\', ' # formate le code lua
       elif type(page_prop[prop]) == dict :   # type = DICT #print type(page_prop[i])
@@ -70,6 +74,8 @@ def wmls_table_input(page_prop):
 	    t = t + str(key) + ' = ' + str(v) + ', ' # Ce sont des entiers
 	  if type(v) == list : 
 	    t = t + str(key) + ' = ' + wmls_list_to_lua(v)   # Ce sont des listes
+	  #if type(v) == bool :
+	  #  t = t + str(key) + ' = ' + str.lower(v) + ', '# convertir le booléen Python au format Lua
       else: # SINON code normal
 	t = t + str(prop) + ' = ' + str(page_prop[prop]) + ', '  # formate k, v
   t = t + wmls_table_next  # ferme la table ajoute une virgule
